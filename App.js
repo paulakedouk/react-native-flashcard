@@ -2,6 +2,9 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { TabNavigator, StackNavigator } from 'react-navigation';
 
+// Components
+import Home from './components/Home';
+
 // Redux
 import { createStore } from 'redux';
 import { Provider, connect } from 'react-redux';
@@ -9,10 +12,10 @@ import { Provider, connect } from 'react-redux';
 const Tabs = TabNavigator({
   Decks: {
     screen: Home
-  },
-  AddDeck: {
-    screen: AddDeck
   }
+  // AddDeck: {
+  //   screen: AddDeck
+  // }
 });
 
 const RootTabs = StackNavigator({
@@ -21,28 +24,29 @@ const RootTabs = StackNavigator({
     navigationOptions: {
       header: null
     }
-  },
-  AddDeck: {
-    screen: AddDeck,
-    navigationOptions: {
-      headerTitle: null
-    }
-  },
-  Deck: {
-    screen: Deck
-  },
-  AddCard: {
-    screen: AddCard,
-    navigationOptions: {
-      headerTitle: 'Add Card'
-    }
-  },
-  Question: {
-    screen: Question,
-    navigationOptions: {
-      headerTitle: 'Quiz'
-    }
   }
+  // ,
+  // AddDeck: {
+  //   screen: AddDeck,
+  //   navigationOptions: {
+  //     headerTitle: null
+  //   }
+  // },
+  // Deck: {
+  //   screen: Deck
+  // },
+  // AddCard: {
+  //   screen: AddCard,
+  //   navigationOptions: {
+  //     headerTitle: 'Add Card'
+  //   }
+  // },
+  // Question: {
+  //   screen: Question,
+  //   navigationOptions: {
+  //     headerTitle: 'Quiz'
+  //   }
+  // }
 });
 
 const styles = StyleSheet.create({
