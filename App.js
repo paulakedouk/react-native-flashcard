@@ -5,6 +5,7 @@ import { Constants } from 'expo';
 
 // Components
 import Home from './components/Home';
+import AddDeck from './components/AddDeck';
 
 // Redux
 import { createStore } from 'redux';
@@ -14,10 +15,10 @@ import reducer from './reducers';
 const Tabs = TabNavigator({
   Decks: {
     screen: Home
+  },
+  AddDeck: {
+    screen: AddDeck
   }
-  // AddDeck: {
-  //   screen: AddDeck
-  // }
 });
 
 const RootTabs = StackNavigator({
@@ -26,14 +27,13 @@ const RootTabs = StackNavigator({
     navigationOptions: {
       tabBarLabel: 'DECKS'
     }
+  },
+  AddDeck: {
+    screen: AddDeck,
+    navigationOptions: {
+      headerTitle: null
+    }
   }
-  // ,
-  // AddDeck: {
-  //   screen: AddDeck,
-  //   navigationOptions: {
-  //     headerTitle: null
-  //   }
-  // },
   // Deck: {
   //   screen: Deck
   // },
@@ -49,15 +49,6 @@ const RootTabs = StackNavigator({
   //     headerTitle: 'Quiz'
   //   }
   // }
-});
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
 });
 
 function AppStatusBar() {

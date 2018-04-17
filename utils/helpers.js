@@ -3,6 +3,15 @@ import { Notifications, Permissions } from 'expo';
 
 const key = 'NOTIFICATIONS';
 
+export const colors = {
+  white: '#fff',
+  darkBlue: '#333241',
+  lightBlue: '#5d5d71',
+  blue: '#a0b0be',
+  green: '#56be71',
+  red: '#be382d'
+};
+
 function createNotification() {
   return {
     title: 'FlashCards',
@@ -17,6 +26,14 @@ function createNotification() {
       vibrate: true
     }
   };
+} // ID
+export function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return s4() + s4();
 }
 export function setLocalNotification() {
   AsyncStorage.getItem(key)
