@@ -1,13 +1,15 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, StatusBar } from 'react-native';
 import { TabNavigator, StackNavigator } from 'react-navigation';
+import { Constants } from 'expo';
 
 // Components
 import Home from './components/Home';
 
 // Redux
 import { createStore } from 'redux';
-import { Provider, connect } from 'react-redux';
+import { Provider } from 'react-redux';
+import reducer from './reducers';
 
 const Tabs = TabNavigator({
   Decks: {
@@ -22,7 +24,7 @@ const RootTabs = StackNavigator({
   Home: {
     screen: Tabs,
     navigationOptions: {
-      header: null
+      tabBarLabel: 'DECKS'
     }
   }
   // ,
@@ -58,11 +60,20 @@ const styles = StyleSheet.create({
   }
 });
 
+function AppStatusBar() {
+  return (
+    <View style={{ height: Constants.statusBarHeight }}>
+      <StatusBar translucent />
+    </View>
+  );
+}
+
 export default class App extends React.Component {
   render() {
     return (
-      <Provider store={store}>
+      <Provider store={createStore(reducer)}>
         <View style={{ flex: 1 }}>
+          <AppStatusBar barStyle="light-content" />
           <RootTabs />
         </View>
       </Provider>

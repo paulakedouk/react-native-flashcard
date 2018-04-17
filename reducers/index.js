@@ -1,11 +1,16 @@
-import { GET_DECKS } from './actions';
+import { RECEIVE_DECKS, ADD_DECK } from '../actions';
 
 const decks = (state = {}, action) => {
-  const { decks } = action;
+  const { id, deck, type, decks } = action;
   switch (type) {
-    case GET_DECKS:
+    case RECEIVE_DECKS:
       return {
         decks
+      };
+    case ADD_DECK:
+      return {
+        ...state,
+        [id]: deck
       };
     default:
       return state;
