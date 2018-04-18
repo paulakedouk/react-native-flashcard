@@ -1,12 +1,34 @@
 import { AsyncStorage } from 'react-native';
+import { keys } from './helpers';
 
-export const STORAGE_KEY = 'STORAGE_KEY';
+export function getDecks() {
+  return AsyncStorage.getItem(keys.STORAGE_KEY).then(db => {
+    if (!db) {
+      return {};
+    }
+    return JSON.parse(db);
+  });
+}
 
-export function addDeckAPI(id, deck) {
+export function getDeck(id) {
+  return getDecks().then(decks => decks[id]);
+}
+
+export function deckTitle(title) {
   return AsyncStorage.mergeItem(
-    STORAGE_KEY,
+    keys.STORAGE_KEY,
     JSON.stringify({
-      [id]: deck
+      [title]: {
+        title,
+        questions: []
+      }
     })
   );
+}
+
+export function addCardToDeck(title, question) {
+  return getDecks().then(decks => {
+    decks[title].questions.push(question);
+    return AsyncStorage.setItem(keys.STORAGE_KEY, JSON.stringify(decks));
+  });
 }

@@ -1,7 +1,10 @@
 import { AsyncStorage } from 'react-native';
 import { Notifications, Permissions } from 'expo';
 
-const key = 'NOTIFICATIONS';
+export const keys = {
+  STORAGE_KEY: 'paulakedouk:flashcards_storage',
+  NOTIFICATION_KEY: 'paulakedouk:flashcards_notification'
+};
 
 export const colors = {
   white: '#fff',
@@ -11,6 +14,12 @@ export const colors = {
   green: '#56be71',
   red: '#be382d'
 };
+
+// export function timeToString(time = Date.now()) {
+//   const date = new Date(time);
+//   const todayUTC = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+//   return todayUTC.toISOString().split('T')[0];
+// }
 
 function createNotification() {
   return {
@@ -26,7 +35,7 @@ function createNotification() {
       vibrate: true
     }
   };
-} // ID
+}
 export function guid() {
   function s4() {
     return Math.floor((1 + Math.random()) * 0x10000)
@@ -35,8 +44,11 @@ export function guid() {
   }
   return s4() + s4();
 }
+export function clearLocalNotification() {
+  return AsyncStorage.removeItem(keys.NOTIFICATION_KEY).then(Notifications.cancelAllScheduledNotificationsAsync);
+}
 export function setLocalNotification() {
-  AsyncStorage.getItem(key)
+  AsyncStorage.getItem(keys.NOTIFICATION_KEY)
     .then(data => {
       if (data === null) {
         Permissions.askAsync(Permissions.NOTIFICATIONS).then(({ status }) => {
@@ -47,7 +59,7 @@ export function setLocalNotification() {
             tomorrow.setHours(20);
             tomorrow.setMinutes(0);
             Notifications.scheduleLocalNotificationAsync(createNotification(), { time: tomorrow, repeat: 'day' });
-            AsyncStorage.setItem(key, JSON.stringify(true));
+            AsyncStorage.setItem(keys.NOTIFICATION_KEY, JSON.stringify(true));
           }
         });
       }
