@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Platform } from 'react-native';
 import { guid } from '../utils/helpers';
 import { NavigationActions } from 'react-navigation';
-import { colors, timeToString, clearLocalNotification } from '../utils/helpers';
+import { timeToString, clearLocalNotification } from '../utils/helpers';
+import { colors, stylesConstants } from '../utils/constants';
 
 // Redux
 import { connect } from 'react-redux';
@@ -11,8 +12,11 @@ import { createDeck } from '../utils/api';
 
 function SubmitBtn({ onPress }) {
   return (
-    <TouchableOpacity style={Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.AndroidSubmitBtn} onPress={onPress}>
-      <Text style={styles.submitBtnText}>SUBMIT</Text>
+    <TouchableOpacity
+      style={Platform.OS === 'ios' ? stylesConstants.btnIOS : stylesConstants.AndroidSubmitBtn}
+      onPress={onPress}
+    >
+      <Text style={stylesConstants.submitBtnText}>SUBMIT</Text>
     </TouchableOpacity>
   );
 }
@@ -52,7 +56,7 @@ class AddDeck extends Component {
             style={styles.textInput}
           />
         </View>
-        <View style={styles.boxSubmitBtn}>
+        <View style={stylesConstants.boxSubmitBtn}>
           <SubmitBtn onPress={this.submit} />
         </View>
       </View>
@@ -63,35 +67,14 @@ class AddDeck extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: colors.white
+    padding: 20
   },
   row: {
     flexDirection: 'row',
     flex: 1,
     alignItems: 'center'
   },
-  iosSubmitBtn: {
-    backgroundColor: colors.darkBlue,
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 30,
-    paddingRight: 30,
-    borderRadius: 7,
-    marginLeft: 40,
-    marginRight: 40
-  },
-  AndroidSubmitBtn: {
-    backgroundColor: colors.darkBlue,
-    padding: 10,
-    paddingLeft: 30,
-    paddingRight: 30,
-    height: 45,
-    borderRadius: 2,
-    alignSelf: 'flex-end',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
+
   headerText: {
     color: colors.darkBlue,
     textAlign: 'center',
@@ -110,22 +93,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
     height: 60,
     margin: 50
-  },
-  boxSubmitBtn: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center'
-  },
-  submitBtn: {
-    alignItems: 'center',
-    backgroundColor: colors.darkBlue,
-
-    width: 200,
-    borderRadius: 3
-  },
-  submitBtnText: {
-    color: colors.white,
-    textAlign: 'center'
   }
 });
 

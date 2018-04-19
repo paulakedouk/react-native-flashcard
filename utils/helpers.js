@@ -6,15 +6,6 @@ export const keys = {
   NOTIFICATION_KEY: 'paulakedouk:flashcards_notification'
 };
 
-export const colors = {
-  white: '#fff',
-  darkBlue: '#333241',
-  lightBlue: '#5d5d71',
-  blue: '#a0b0be',
-  green: '#56be71',
-  red: '#be382d'
-};
-
 export function timeToString(time = Date.now()) {
   const date = new Date(time);
   const todayUTC = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));

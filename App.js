@@ -3,11 +3,13 @@ import { StyleSheet, Text, View, StatusBar, Platform } from 'react-native';
 import { TabNavigator, StackNavigator } from 'react-navigation';
 import { Constants } from 'expo';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
-import { colors, setLocalNotification } from './utils/helpers';
+import { setLocalNotification } from './utils/helpers';
+import { colors } from './utils/constants';
 
 // Components
 import Home from './components/Home';
 import AddDeck from './components/AddDeck';
+import Deck from './components/Deck';
 
 // Redux
 import { createStore } from 'redux';
@@ -60,9 +62,36 @@ const Tabs = TabNavigator(
   }
 );
 
-const Stack = StackNavigator({
-  Decks: {
-    screen: Home
+const RootTabs = StackNavigator({
+  Home: {
+    screen: Tabs
+  },
+  AddDeck: {
+    screen: AddDeck,
+    navigationOptions: {
+      headerTitle: null
+    }
+  },
+  Deck: {
+    screen: Deck,
+    navigationOptions: ({ navigation }) => ({
+      title: `${navigation.state.params.deckName}`.toUpperCase(),
+      headerTintColor: Platform.OS === 'ios' ? colors.darkBlue : colors.lightBlue,
+      headerStyle:
+        Platform.OS === 'ios'
+          ? {
+              maxHeight: 40,
+              paddingBottom: 20,
+              backgroundColor: colors.charcoal
+            }
+          : {
+              backgroundColor: colors.charcoal
+            },
+      headerTitleStyle: {
+        fontWeight: 'bold',
+        fontSize: 14
+      }
+    })
   }
 });
 
@@ -76,7 +105,7 @@ export default class App extends React.Component {
       <Provider store={createStore(reducer)}>
         <View style={{ flex: 1 }}>
           <AppStatusBar backgroundColor={colors.darkBlue} barStyle="light-content" />
-          <Tabs />
+          <RootTabs />
         </View>
       </Provider>
     );

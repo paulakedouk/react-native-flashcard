@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { View, ScrollView, Text, FlatList, StyleSheet, TouchableOpacity, Animated, Platform } from 'react-native';
 import { loadingDecks } from '../actions';
 import { getDecks, remo } from '../utils/api';
-import { colors, clearLocalNotification, setLocalNotification } from '../utils/helpers';
+import { clearLocalNotification, setLocalNotification } from '../utils/helpers';
+import { colors, stylesConstants } from '../utils/constants';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 
 class Home extends Component {
@@ -22,10 +23,14 @@ class Home extends Component {
 
     return (
       <ScrollView>
+        <Text style={styles.headerText}>All Decks</Text>
         {deckList.length ? (
           deckList.map((deck, key) => (
-            <View key={key} style={styles.container}>
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('Home', { deckTitle: deck.title })}>
+            <TouchableOpacity
+              key={key}
+              onPress={() => this.props.navigation.navigate('Deck', { deckTitle: deck.title })}
+            >
+              <View style={stylesConstants.cardContainer}>
                 <View style={styles.viewInfo}>
                   <View>
                     <Text style={styles.titleCard}>{`${deck.title}`.toUpperCase()}</Text>
@@ -42,11 +47,11 @@ class Home extends Component {
                     <FontAwesome name="chevron-right" size={10} color={colors.darkBlue} style={{ marginLeft: 20 }} />
                   )}
                 </View>
-              </TouchableOpacity>
-            </View>
+              </View>
+            </TouchableOpacity>
           ))
         ) : (
-          <View style={[styles.container, { margin: 20, alignSelf: 'center' }]}>
+          <View style={[stylesConstants.cardContainer, { margin: 20, alignSelf: 'center' }]}>
             <Text style={styles.titleCard}>None!</Text>
           </View>
         )}
@@ -56,18 +61,6 @@ class Home extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    margin: 20,
-    height: 100,
-    padding: 10,
-    borderBottomWidth: 2,
-    borderTopWidth: 2,
-    borderWidth: 2,
-    borderRadius: 2,
-    borderColor: colors.darkBlue,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
   headerText: {
     color: colors.darkBlue,
     textAlign: 'center',
