@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Platform } from 'react-native';
 import { guid } from '../utils/helpers';
 import { NavigationActions } from 'react-navigation';
-import { colors, clearLocalNotification } from '../utils/helpers';
+import { colors, timeToString, clearLocalNotification } from '../utils/helpers';
 
 // Redux
 import { connect } from 'react-redux';
-import { addDeck } from '../actions';
-import { submitDeck, deckTitle } from '../utils/api';
+import { newDeck } from '../actions';
+import { createDeck } from '../utils/api';
 
 function SubmitBtn({ onPress }) {
   return (
@@ -19,29 +19,24 @@ function SubmitBtn({ onPress }) {
 
 class AddDeck extends Component {
   state = {
-    title: ''
+    deckTitle: ''
   };
 
-  handleTitleInput = title => {
-    this.setState({ title });
+  handleTitleInput = deckTitle => {
+    this.setState({ deckTitle });
   };
 
   submit = () => {
-    const { title } = this.state;
+    const { deckTitle } = this.state;
     const { decks, navigation } = this.props;
-    // const existingDeckTitles = Object.keys(decks).map(title => console.log(title.toLowerCase()));
-    // console.log(existingDeckTitles);
 
-    // if (!title || !title.length) {
-    //   return alert('Você precisa dar um nome para o Deck.');
-    // }
+    this.props.newDeck(deckTitle);
 
-    this.props.dispatch(addDeck(title));
-    deckTitle(title).then(() => {
-      navigation.navigate('Home', { title });
+    createDeck(deckTitle).then(() => {
+      navigation.navigate('Home', { deckTitle, length: 1 });
     });
 
-    this.setState(() => ({ title: '' }));
+    this.setState(() => ({ deckTitle: '' }));
   };
 
   render() {
@@ -50,10 +45,10 @@ class AddDeck extends Component {
         <View style={styles.input}>
           <Text style={styles.headerText}>Add a title to your Deck</Text>
           <TextInput
-            onChangeText={this.handleTextInput}
-            value={this.state.text}
             placeholder="Deck title"
+            value={this.state.deckTitle}
             maxLength={30}
+            onChangeText={this.handleTitleInput}
             style={styles.textInput}
           />
         </View>
@@ -140,4 +135,4 @@ const mapStateToProps = decks => {
   };
 };
 
-export default connect(mapStateToProps)(AddDeck);
+export default connect(mapStateToProps, { newDeck })(AddDeck);

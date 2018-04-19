@@ -1,39 +1,56 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Animated, Platform } from 'react-native';
+import { View, ScrollView, Text, FlatList, StyleSheet, TouchableOpacity, Animated, Platform } from 'react-native';
 import { loadingDecks } from '../actions';
-import { getDecks } from '../utils/api';
-import { colors } from '../utils/helpers';
+import { getDecks, remo } from '../utils/api';
+import { colors, clearLocalNotification, setLocalNotification } from '../utils/helpers';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 
 class Home extends Component {
-  state = {
-    ready: false
-  };
-
-  componentDidMount() {
-    getDecks()
-      .then(decks => {
-        this.props.dispatch(loadingDecks(decks));
-      })
-      .then(() => this.setState(() => ({ ready: true })));
+  async componentDidMount() {
+    try {
+      const decks = await getDecks(); //fetch the decks
+      this.props.dispatch(loadingDecks(decks)); //update the redux store, once the decks are fetched
+    } catch (error) {
+      console.log('error: ', error);
+    }
   }
+
   render() {
     const { decks, deckList } = this.props;
-    const { ready } = this.state;
-    // console.log(this.props);
+    // console.log(this.props.deckList);
 
     return (
-      <View>
-        <Text style={styles.headerText}>All Decks</Text>
+      <ScrollView>
         {deckList.length ? (
-          deckList.map(deck => console.log(deck))
+          deckList.map((deck, key) => (
+            <View key={key} style={styles.container}>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('Home', { deckTitle: deck.title })}>
+                <View style={styles.viewInfo}>
+                  <View>
+                    <Text style={styles.titleCard}>{`${deck.title}`.toUpperCase()}</Text>
+                    {/* <Text style={styles.infoCard}>{decks.questions.length} cards</Text> */}
+                  </View>
+                  {Platform.OS === 'ios' ? (
+                    <MaterialCommunityIcons
+                      name="chevron-right"
+                      size={20}
+                      color={colors.darkBlue}
+                      style={{ marginLeft: 20 }}
+                    />
+                  ) : (
+                    <FontAwesome name="chevron-right" size={10} color={colors.darkBlue} style={{ marginLeft: 20 }} />
+                  )}
+                </View>
+              </TouchableOpacity>
+            </View>
+          ))
         ) : (
           <View style={[styles.container, { margin: 20, alignSelf: 'center' }]}>
-            <Text style={styles.titleCard}>No cards added yet.</Text>
+            <Text style={styles.titleCard}>None!</Text>
           </View>
         )}
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -77,7 +94,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = decks => ({
   decks,
-  deckList: typeof decks == 'object' ? Object.keys(decks).map(title => decks[title]) : []
+  deckList: typeof decks == 'object' ? Object.keys(decks).map(deckTitle => decks[deckTitle]) : []
 });
 
 export default connect(mapStateToProps)(Home);

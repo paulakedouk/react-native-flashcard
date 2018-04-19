@@ -24,10 +24,10 @@ function AppStatusBar({ ...props }) {
 
 const Tabs = TabNavigator(
   {
-    Decks: {
+    Home: {
       screen: Home,
       navigationOptions: {
-        tabBarLabel: 'Home',
+        tabBarLabel: 'Decks',
         tabBarIcon: () => <FontAwesome name="home" size={30} color={colors.darkBlue} />
       }
     },
