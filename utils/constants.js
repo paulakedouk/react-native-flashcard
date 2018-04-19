@@ -41,15 +41,12 @@ export const stylesConstants = StyleSheet.create({
     marginRight: 40,
     marginBottom: 20
   },
-  AndroidSubmitBtn: {
+  btnAndroid: {
     backgroundColor: colors.darkBlue,
+    width: 300,
     padding: 10,
-    paddingLeft: 30,
-    paddingRight: 30,
     height: 45,
     borderRadius: 2,
-    alignSelf: 'flex-end',
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: 'center'
   }
 });

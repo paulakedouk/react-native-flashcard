@@ -13,7 +13,7 @@ import { createDeck } from '../utils/api';
 function SubmitBtn({ onPress }) {
   return (
     <TouchableOpacity
-      style={Platform.OS === 'ios' ? stylesConstants.btnIOS : stylesConstants.AndroidSubmitBtn}
+      style={Platform.OS === 'ios' ? stylesConstants.btnIOS : stylesConstants.btnAndroid}
       onPress={onPress}
     >
       <Text style={stylesConstants.submitBtnText}>SUBMIT</Text>
@@ -47,17 +47,18 @@ class AddDeck extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.input}>
-          <Text style={styles.headerText}>Add a title to your Deck</Text>
+          <Text style={styles.headerText}>Add a title to your deck</Text>
           <TextInput
             placeholder="Deck title"
             value={this.state.deckTitle}
             maxLength={30}
             onChangeText={this.handleTitleInput}
             style={styles.textInput}
+            underlineColorAndroid="transparent"
           />
-        </View>
-        <View style={stylesConstants.boxSubmitBtn}>
-          <SubmitBtn onPress={this.submit} />
+          <View style={stylesConstants.boxSubmitBtn}>
+            <SubmitBtn onPress={this.submit} />
+          </View>
         </View>
       </View>
     );
@@ -66,15 +67,11 @@ class AddDeck extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 20
-  },
-  row: {
     flexDirection: 'row',
     flex: 1,
-    alignItems: 'center'
+    padding: 20,
+    marginTop: 100
   },
-
   headerText: {
     color: colors.darkBlue,
     textAlign: 'center',
@@ -83,16 +80,20 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    justifyContent: 'flex-end'
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   textInput: {
     borderWidth: 1,
     borderColor: colors.lightBlue,
     textAlign: 'center',
-    borderRadius: 3,
+    borderRadius: 2,
     fontSize: 22,
+    width: 300,
     height: 60,
-    margin: 50
+    marginTop: 50,
+    marginBottom: 10
   }
 });
 

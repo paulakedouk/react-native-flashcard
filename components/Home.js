@@ -19,7 +19,7 @@ class Home extends Component {
 
   render() {
     const { decks, deckList } = this.props;
-    // console.log(this.props.deckList);
+    // console.log(this.props);
 
     return (
       <ScrollView>
@@ -34,7 +34,6 @@ class Home extends Component {
                 <View style={styles.viewInfo}>
                   <View>
                     <Text style={styles.titleCard}>{`${deck.title}`.toUpperCase()}</Text>
-                    {/* <Text style={styles.infoCard}>{decks.questions.length} cards</Text> */}
                   </View>
                   {Platform.OS === 'ios' ? (
                     <MaterialCommunityIcons
@@ -47,6 +46,7 @@ class Home extends Component {
                     <FontAwesome name="chevron-right" size={10} color={colors.darkBlue} style={{ marginLeft: 20 }} />
                   )}
                 </View>
+                <Text style={styles.infoCard}> cards</Text>
               </View>
             </TouchableOpacity>
           ))
@@ -80,8 +80,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   infoCard: {
-    color: colors.white,
-    fontSize: 10
+    color: colors.darkBlue,
+    fontSize: 12,
+    marginTop: 10
   }
 });
 

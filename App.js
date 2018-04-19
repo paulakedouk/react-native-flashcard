@@ -75,17 +75,17 @@ const RootTabs = StackNavigator({
   Deck: {
     screen: Deck,
     navigationOptions: ({ navigation }) => ({
-      title: `${navigation.state.params.deckName}`.toUpperCase(),
-      headerTintColor: Platform.OS === 'ios' ? colors.darkBlue : colors.lightBlue,
+      title: `${navigation.state.params.deckTitle}`.toUpperCase() + ' DECK',
+      headerTintColor: Platform.OS === 'ios' ? colors.white : colors.lightBlue,
       headerStyle:
         Platform.OS === 'ios'
           ? {
               maxHeight: 40,
               paddingBottom: 20,
-              backgroundColor: colors.charcoal
+              backgroundColor: colors.darkBlue
             }
           : {
-              backgroundColor: colors.charcoal
+              backgroundColor: colors.darkBlue
             },
       headerTitleStyle: {
         fontWeight: 'bold',

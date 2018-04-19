@@ -5,7 +5,11 @@ import { getDecks, deleteDeck } from '../actions/index';
 import { colors, stylesConstants } from '../utils/constants';
 
 class Deck extends Component {
-  handleAddCard = () => {};
+  handleAddCard = () => {
+    const { deckTitle, decks } = this.props;
+    const deck = decks[deckTitle];
+    this.props.navigation.navigate('Card', { deck });
+  };
   handleQuiz = () => {};
 
   render() {
@@ -13,41 +17,29 @@ class Deck extends Component {
     const { deckTitle, decks } = this.props;
     const deck = decks[deckTitle];
 
-    // if (deck.length > 0) {
-    //   return (
-    //     <TouchableOpacity style={styles.btns} onPress={this.actions}>
-    //       <Text style={{ color: colors.white, fontSize: 16 }}>START QUIZ</Text>
-    //     </TouchableOpacity>
-    //   );
-    // } else {
-    //   return (
-    //     <TouchableOpacity style={[styles.btns, { opacity: 0.6 }]} disabled={true}>
-    //       <Text style={{ color: colors.white, fontSize: 16 }}>START QUIZ</Text>
-    //     </TouchableOpacity>
-    //   );
-    // }
-
     return (
       <View style={styles.container}>
         <View style={styles.viewInfo}>
           <Text style={styles.title}>{`${deck.title}`.toUpperCase()}</Text>
-          <Text style={styles.infoTxt}>{deck.questions.length} CARDS</Text>
+          {/* <Text style={styles.infoTxt}>{deck.card.length} CARDS</Text> */}
         </View>
 
         <View style={stylesConstants.boxSubmitBtn}>
-          <TouchableOpacity
-            style={Platform.OS === 'ios' ? stylesConstants.btnIOS : stylesConstants.AndroidSubmitBtn}
-            onPress={this.handleAddCard}
-          >
-            <Text style={stylesConstants.submitBtnText}>Add Card</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={Platform.OS === 'ios' ? stylesConstants.btnIOS : stylesConstants.AndroidSubmitBtn}
-            onPress={this.handleQuiz}
-          >
-            <Text style={stylesConstants.submitBtnText}>Start Quiz</Text>
-          </TouchableOpacity>
+          {deck.questions.length > 0 ? (
+            <TouchableOpacity
+              style={Platform.OS === 'ios' ? stylesConstants.btnIOS : stylesConstants.btnAndroid}
+              onPress={this.handleQuiz}
+            >
+              <Text style={stylesConstants.submitBtnText}>Start Quiz</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={Platform.OS === 'ios' ? stylesConstants.btnIOS : stylesConstants.btnAndroid}
+              onPress={this.handleAddCard}
+            >
+              <Text style={stylesConstants.submitBtnText}>Add Card</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     );
