@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, Animated, Platform } from 'react-native';
 import { clearLocalNotification, setLocalNotification } from '../utils/helpers';
 import { colors, stylesConstants } from '../utils/constants';
 
@@ -9,7 +9,8 @@ class Quiz extends Component {
 
     this.state = {
       questionNumber: 1,
-      finished: false
+      finished: false,
+      answer: 'Show Answer'
     };
 
     // console.log(this.props.navigation.state.params.deck);
@@ -18,7 +19,12 @@ class Quiz extends Component {
     this.totalQuestions = this.deck.questions.length;
     console.log(this.totalQuestions);
     this.isQuestion = true;
+    this.showAnswer = this.showAnswer.bind(this);
   }
+
+  showAnswer = () => {
+    this.setState({ answer: this.deck.questions[this.state.questionNumber - 1].answer });
+  };
 
   render() {
     console.log('Quiz render props: ', this.props);
@@ -36,6 +42,9 @@ class Quiz extends Component {
 
         <View style={styles.secondRow}>
           <Text style={styles.questionTitle}>{deck.questions[questionNumber - 1].question}</Text>
+          <Text style={styles.showAnsBtn} onPress={() => this.showAnswer()}>
+            {this.state.answer}
+          </Text>
         </View>
       </View>
     );
@@ -61,8 +70,13 @@ const styles = StyleSheet.create({
   },
   questionTitle: {
     marginTop: 5,
+    marginBottom: 30,
     fontSize: 25,
     fontWeight: 'bold'
+  },
+  showAnsBtn: {
+    textAlign: 'center',
+    color: colors.darkBlue
   }
 });
 
