@@ -41,19 +41,18 @@ class AddCard extends Component {
     if (question === '' || answer === '') {
       alert('Fill all the fields');
     } else {
-      console.log('DECK ________', deck);
       deck.questions = deck.questions.concat(card);
 
       this.props.newDeck(deck);
 
       createDeck(deck).then(() => {
-        navigation.navigate('Deck', { deck });
+        navigation.goBack(null);
       });
     }
   };
 
   render() {
-    console.log('Quiz render props: ', this.props.navigation);
+    // console.log('Quiz render props: ', this.props.navigation);
     return (
       <View style={styles.container}>
         <View style={styles.input}>

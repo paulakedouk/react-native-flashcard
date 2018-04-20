@@ -47,6 +47,7 @@ export const stylesConstants = StyleSheet.create({
     padding: 10,
     height: 45,
     borderRadius: 2,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    marginTop: 10
   }
 });

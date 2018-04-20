@@ -11,6 +11,7 @@ import Home from './components/Home';
 import AddDeck from './components/AddDeck';
 import Deck from './components/Deck';
 import AddCard from './components/AddCard';
+import Quiz from './components/Quiz';
 
 // Redux
 import { createStore } from 'redux';
@@ -95,9 +96,41 @@ const RootTabs = StackNavigator({
     screen: AddCard,
     navigationOptions: {
       headerTintColor: colors.white,
-      title: 'Add a Card',
-      headerStyle: {
-        backgroundColor: colors.darkBlue
+      title: 'ADD A CARD',
+      headerStyle:
+        Platform.OS === 'ios'
+          ? {
+              maxHeight: 40,
+              paddingBottom: 20,
+              backgroundColor: colors.darkBlue
+            }
+          : {
+              backgroundColor: colors.darkBlue
+            },
+      headerTitleStyle: {
+        fontWeight: 'bold',
+        fontSize: 14
+      }
+    }
+  },
+  Quiz: {
+    screen: Quiz,
+    navigationOptions: {
+      headerTintColor: colors.white,
+      title: 'QUIZ',
+      headerStyle:
+        Platform.OS === 'ios'
+          ? {
+              maxHeight: 40,
+              paddingBottom: 20,
+              backgroundColor: colors.darkBlue
+            }
+          : {
+              backgroundColor: colors.darkBlue
+            },
+      headerTitleStyle: {
+        fontWeight: 'bold',
+        fontSize: 14
       }
     }
   }

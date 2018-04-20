@@ -11,31 +11,40 @@ class Deck extends Component {
     this.props.navigation.navigate('AddCard', { deck });
   };
 
-  handleQuiz = () => {};
+  handleQuiz = () => {
+    const { deckTitle, decks } = this.props;
+    const deck = decks[deckTitle];
+    this.props.navigation.navigate('Quiz', { deck });
+  };
 
-  hideBtn = () => {
+  showBtns = () => {
     const { deckTitle, decks } = this.props;
     const deck = decks[deckTitle];
 
-    if (deck.questions.length) {
+    if (deck.questions.length > 0) {
       return (
-        <TouchableOpacity
-          style={Platform.OS === 'ios' ? stylesConstants.btnIOS : stylesConstants.btnAndroid}
-          onPress={this.handleQuiz}
-        >
-          <Text style={stylesConstants.submitBtnText}>Start Quiz</Text>
-        </TouchableOpacity>
+        <View style={stylesConstants.boxSubmitBtn}>
+          <TouchableOpacity
+            style={Platform.OS === 'ios' ? stylesConstants.btnIOS : stylesConstants.btnAndroid}
+            onPress={this.handleQuiz}
+          >
+            <Text style={stylesConstants.submitBtnText}>Start Quiz</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={Platform.OS === 'ios' ? stylesConstants.btnIOS : stylesConstants.btnAndroid}
+            onPress={this.handleAddCard}
+          >
+            <Text style={stylesConstants.submitBtnText}>Add Card</Text>
+          </TouchableOpacity>
+        </View>
       );
     } else {
       return (
         <TouchableOpacity
-          style={[Platform.OS === 'ios' ? stylesConstants.btnIOS : stylesConstants.btnAndroid, { opacity: 0.6 }]}
-          onPress={this.handleQuiz}
-          disabled={true}
+          style={Platform.OS === 'ios' ? stylesConstants.btnIOS : stylesConstants.btnAndroid}
+          onPress={this.handleAddCard}
         >
-          <Text style={[stylesConstants.submitBtnText]} disabled={true}>
-            Start Quiz
-          </Text>
+          <Text style={stylesConstants.submitBtnText}>Add Card</Text>
         </TouchableOpacity>
       );
     }
@@ -44,7 +53,7 @@ class Deck extends Component {
   render() {
     const { deckTitle, decks } = this.props;
     const deck = decks[deckTitle];
-    console.log('Deck -------------- ', deck);
+    // console.log('Deck -------------- ', deck);
 
     return (
       <View style={styles.container}>
@@ -53,16 +62,7 @@ class Deck extends Component {
           <Text style={styles.infoTxt}>{deck.questions.length} CARDS</Text>
         </View>
 
-        <View style={stylesConstants.boxSubmitBtn}>
-          {this.hideBtn()}
-
-          <TouchableOpacity
-            style={Platform.OS === 'ios' ? stylesConstants.btnIOS : stylesConstants.btnAndroid}
-            onPress={this.handleAddCard}
-          >
-            <Text style={stylesConstants.submitBtnText}>Add Card</Text>
-          </TouchableOpacity>
-        </View>
+        <View style={stylesConstants.boxSubmitBtn}>{this.showBtns()}</View>
       </View>
     );
   }
