@@ -13,15 +13,15 @@ class Deck extends Component {
   handleQuiz = () => {};
 
   render() {
-    console.log('DECK: ', this.props);
     const { deckTitle, decks } = this.props;
     const deck = decks[deckTitle];
+    console.log('Deck -------------- ', deck);
 
     return (
       <View style={styles.container}>
         <View style={styles.viewInfo}>
           <Text style={styles.title}>{`${deck.title}`.toUpperCase()}</Text>
-          {/* <Text style={styles.infoTxt}>{deck.card.length} CARDS</Text> */}
+          <Text style={styles.infoTxt}>{deck.questions.length} CARDS</Text>
         </View>
 
         <View style={stylesConstants.boxSubmitBtn}>

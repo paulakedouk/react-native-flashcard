@@ -17,42 +17,44 @@ class Home extends Component {
     }
   }
 
+  _keyExtractor = (item, index) => index;
+
   render() {
     const { decks, deckList } = this.props;
-    // console.log(this.props);
+
+    console.log('Deck -------------- ', deckList);
+
+    const hasCards = item => {
+      return (
+        <View style={stylesConstants.cardContainer}>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('Deck', { deckTitle: item.title })}>
+            <View style={styles.viewInfo}>
+              <Text style={styles.titleCard}>{`${item.title}`.toUpperCase()}</Text>
+              {Platform.OS === 'ios' ? (
+                <MaterialCommunityIcons
+                  name="chevron-right"
+                  size={20}
+                  color={colors.darkBlue}
+                  style={{ marginLeft: 20 }}
+                />
+              ) : (
+                <FontAwesome name="chevron-right" size={10} color={colors.darkBlue} style={{ marginLeft: 20 }} />
+              )}
+            </View>
+          </TouchableOpacity>
+        </View>
+      );
+    };
 
     return (
       <ScrollView>
         <Text style={styles.headerText}>All Decks</Text>
-        {deckList.length ? (
-          deckList.map((deck, key) => (
-            <TouchableOpacity
-              key={key}
-              onPress={() => this.props.navigation.navigate('Deck', { deckTitle: deck.title })}
-            >
-              <View style={stylesConstants.cardContainer}>
-                <View style={styles.viewInfo}>
-                  <View>
-                    <Text style={styles.titleCard}>{`${deck.title}`.toUpperCase()}</Text>
-                  </View>
-                  {Platform.OS === 'ios' ? (
-                    <MaterialCommunityIcons
-                      name="chevron-right"
-                      size={20}
-                      color={colors.darkBlue}
-                      style={{ marginLeft: 20 }}
-                    />
-                  ) : (
-                    <FontAwesome name="chevron-right" size={10} color={colors.darkBlue} style={{ marginLeft: 20 }} />
-                  )}
-                </View>
-                <Text style={styles.infoCard}> cards</Text>
-              </View>
-            </TouchableOpacity>
-          ))
-        ) : (
-          <View style={[stylesConstants.cardContainer, { margin: 20, alignSelf: 'center' }]}>
-            <Text style={styles.titleCard}>None!</Text>
+
+        <FlatList data={deckList} renderItem={({ item }) => hasCards(item)} keyExtractor={this._keyExtractor} />
+
+        {(decks === undefined || decks === null) && (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text>Add a deck to start a quiz</Text>
           </View>
         )}
       </ScrollView>
