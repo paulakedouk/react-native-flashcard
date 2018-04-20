@@ -27,11 +27,15 @@ class Quiz extends Component {
     const { deck, totalQuestions, score } = this;
 
     return (
-      <View style={[styles.container, styles.withBorder]}>
-        <View style={[styles.row, styles.withBorder]}>
+      <View style={styles.container}>
+        <View style={styles.row}>
           <Text style={styles.questionNum}>
             {questionNumber} / {totalQuestions}
           </Text>
+        </View>
+
+        <View style={styles.secondRow}>
+          <Text style={styles.questionTitle}>{deck.questions[questionNumber - 1].question}</Text>
         </View>
       </View>
     );
@@ -41,14 +45,24 @@ class Quiz extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
     justifyContent: 'space-between'
   },
   row: {
-    flex: 1
+    flex: 1,
+    alignItems: 'center'
+  },
+  secondRow: {
+    flex: 2,
+    alignItems: 'center'
   },
   questionNum: {
-    fontSize: 22
+    fontSize: 22,
+    marginTop: 100
+  },
+  questionTitle: {
+    marginTop: 5,
+    fontSize: 25,
+    fontWeight: 'bold'
   }
 });
 

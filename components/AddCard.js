@@ -56,6 +56,7 @@ class AddCard extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.input}>
+          <Text style={styles.headerText}>Add a card</Text>
           <TextInput
             placeholder="Insert a question"
             value={this.state.question}
@@ -88,8 +89,8 @@ class AddCard extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
     flex: 1,
+    flexDirection: 'row',
     padding: 20,
     marginTop: 100
   },
@@ -97,12 +98,11 @@ const styles = StyleSheet.create({
     color: colors.darkBlue,
     textAlign: 'center',
     fontSize: 20,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    marginBottom: 20
   },
   input: {
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'flex-end',
     alignItems: 'center'
   },
   textInput: {
