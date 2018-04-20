@@ -10,6 +10,7 @@ import { colors } from './utils/constants';
 import Home from './components/Home';
 import AddDeck from './components/AddDeck';
 import Deck from './components/Deck';
+import AddCard from './components/AddCard';
 
 // Redux
 import { createStore } from 'redux';
@@ -67,16 +68,13 @@ const RootTabs = StackNavigator({
     screen: Tabs
   },
   AddDeck: {
-    screen: AddDeck,
-    navigationOptions: {
-      headerTitle: null
-    }
+    screen: AddDeck
   },
   Deck: {
     screen: Deck,
     navigationOptions: ({ navigation }) => ({
       title: `${navigation.state.params.deckTitle}`.toUpperCase() + ' DECK',
-      headerTintColor: Platform.OS === 'ios' ? colors.white : colors.lightBlue,
+      headerTintColor: colors.white,
       headerStyle:
         Platform.OS === 'ios'
           ? {
@@ -92,6 +90,16 @@ const RootTabs = StackNavigator({
         fontSize: 14
       }
     })
+  },
+  AddCard: {
+    screen: AddCard,
+    navigationOptions: {
+      headerTintColor: colors.white,
+      title: 'Add a Card',
+      headerStyle: {
+        backgroundColor: colors.darkBlue
+      }
+    }
   }
 });
 

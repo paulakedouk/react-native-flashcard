@@ -8,9 +8,38 @@ class Deck extends Component {
   handleAddCard = () => {
     const { deckTitle, decks } = this.props;
     const deck = decks[deckTitle];
-    this.props.navigation.navigate('Card', { deck });
+    this.props.navigation.navigate('AddCard', { deck });
   };
+
   handleQuiz = () => {};
+
+  hideBtn = () => {
+    const { deckTitle, decks } = this.props;
+    const deck = decks[deckTitle];
+
+    if (deck.questions.length) {
+      return (
+        <TouchableOpacity
+          style={Platform.OS === 'ios' ? stylesConstants.btnIOS : stylesConstants.btnAndroid}
+          onPress={this.handleQuiz}
+        >
+          <Text style={stylesConstants.submitBtnText}>Start Quiz</Text>
+        </TouchableOpacity>
+      );
+    } else {
+      return (
+        <TouchableOpacity
+          style={[Platform.OS === 'ios' ? stylesConstants.btnIOS : stylesConstants.btnAndroid, { opacity: 0.6 }]}
+          onPress={this.handleQuiz}
+          disabled={true}
+        >
+          <Text style={[stylesConstants.submitBtnText]} disabled={true}>
+            Start Quiz
+          </Text>
+        </TouchableOpacity>
+      );
+    }
+  };
 
   render() {
     const { deckTitle, decks } = this.props;
@@ -25,21 +54,14 @@ class Deck extends Component {
         </View>
 
         <View style={stylesConstants.boxSubmitBtn}>
-          {deck.questions.length > 0 ? (
-            <TouchableOpacity
-              style={Platform.OS === 'ios' ? stylesConstants.btnIOS : stylesConstants.btnAndroid}
-              onPress={this.handleQuiz}
-            >
-              <Text style={stylesConstants.submitBtnText}>Start Quiz</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              style={Platform.OS === 'ios' ? stylesConstants.btnIOS : stylesConstants.btnAndroid}
-              onPress={this.handleAddCard}
-            >
-              <Text style={stylesConstants.submitBtnText}>Add Card</Text>
-            </TouchableOpacity>
-          )}
+          {this.hideBtn()}
+
+          <TouchableOpacity
+            style={Platform.OS === 'ios' ? stylesConstants.btnIOS : stylesConstants.btnAndroid}
+            onPress={this.handleAddCard}
+          >
+            <Text style={stylesConstants.submitBtnText}>Add Card</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );

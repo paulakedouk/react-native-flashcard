@@ -21,13 +21,16 @@ class Home extends Component {
 
   render() {
     const { decks, deckList } = this.props;
-
-    console.log('Deck -------------- ', deckList);
+    // console.log('Deck -------------- ', deckList);
 
     const hasCards = item => {
+      // console.log('Item ======== ', item);
+      // let keysArray = Object.keys(item.title);
+      // console.log(keysArray);
+      // let length = keysArray.length;
       return (
-        <View style={stylesConstants.cardContainer}>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('Deck', { deckTitle: item.title })}>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('Deck', { deckTitle: item.title })}>
+          <View style={stylesConstants.cardContainer}>
             <View style={styles.viewInfo}>
               <Text style={styles.titleCard}>{`${item.title}`.toUpperCase()}</Text>
               {Platform.OS === 'ios' ? (
@@ -41,8 +44,9 @@ class Home extends Component {
                 <FontAwesome name="chevron-right" size={10} color={colors.darkBlue} style={{ marginLeft: 20 }} />
               )}
             </View>
-          </TouchableOpacity>
-        </View>
+            <Text>X cards</Text>
+          </View>
+        </TouchableOpacity>
       );
     };
 
