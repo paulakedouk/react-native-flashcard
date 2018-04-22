@@ -56,9 +56,10 @@ class Quiz extends Component {
     this.props.navigation.navigate('Quiz', { deck });
   };
 
-  goBack = () => {
-    this.props.navigation.goBack();
+  goBack = deck => {
+    this.props.navigation.navigate('Deck', { deckTitle: deck.title });
   };
+
   render() {
     // console.log('Quiz render props: ', this.state);
     const { questionNumber, finished, score } = this.state;
@@ -79,7 +80,7 @@ class Quiz extends Component {
               <Text style={stylesConstants.submitBtnText}>Restart Quiz</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={this.goBack} style={stylesConstants.btnIOS}>
+            <TouchableOpacity onPress={() => this.goBack(deck)} style={stylesConstants.btnIOS}>
               <Text style={stylesConstants.submitBtnText}>Back to Deck</Text>
             </TouchableOpacity>
           </View>
