@@ -14,6 +14,7 @@ class Deck extends Component {
   handleQuiz = () => {
     const { deckTitle, decks } = this.props;
     const deck = decks[deckTitle];
+    console.log(deck);
     this.props.navigation.navigate('Quiz', { deck });
   };
 

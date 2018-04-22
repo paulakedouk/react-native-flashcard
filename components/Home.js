@@ -25,9 +25,7 @@ class Home extends Component {
 
     const hasCards = item => {
       // console.log('Item ======== ', item);
-      // let keysArray = Object.keys(item.title);
-      // console.log(keysArray);
-      // let length = keysArray.length;
+
       return (
         <TouchableOpacity onPress={() => this.props.navigation.navigate('Deck', { deckTitle: item.title })}>
           <View style={stylesConstants.cardContainer}>
@@ -44,7 +42,7 @@ class Home extends Component {
                 <FontAwesome name="chevron-right" size={10} color={colors.darkBlue} style={{ marginLeft: 20 }} />
               )}
             </View>
-            <Text>X cards</Text>
+            <Text>{item.questions.length} cards</Text>
           </View>
         </TouchableOpacity>
       );
