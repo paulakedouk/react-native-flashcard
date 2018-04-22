@@ -27,15 +27,19 @@ class Quiz extends Component {
   };
 
   next = correct => {
-    const deck = this.props.navigation.state.params.deck;
+    if (correct === true) {
+      this.setState({
+        score: this.state.score + 1
+      });
+    }
 
     if (this.state.questionNumber >= this.totalQuestions) {
       this.setState({
         finished: true
       });
+      // return this.results(deck);
       clearLocalNotification();
       setLocalNotification();
-      // Show the results
     } else {
       this.setState((prevState, props) => ({
         questionNumber: prevState.questionNumber + 1,
@@ -44,69 +48,34 @@ class Quiz extends Component {
     }
   };
 
-  results = deck => {
-    console.log('finished!');
-    const scorePercentage = Math.round(this.state.score / deck.questions.length * 100);
-    <View style={{ flex: 1 }}>
-      <View>
-        <Text>{scorePercentage > 50 ? 'Congratulations! 😺' : 'Practice makes perfect 😾'}</Text>
-        <Text>
-          {this.state.score}/{deck.questions.length} points earned
-        </Text>
-        <Text>{scorePercentage}%</Text>
-        <TouchableOpacity
-          style={stylesConstants.btnIOS}
-          onPress={() => this.restart()}
-          underlayColor="#336677"
-          activeOpacity={0.9}
-        >
-          <Text>Restart</Text>
-        </TouchableOpacity>
-      </View>
-    </View>;
+  restart = deck => {
+    if (this.finished) {
+      this.setState({ questionNumber: 1, finished: false, score: 0 });
+    }
+
+    this.props.navigation.navigate('Quiz', { deck });
   };
-  restart = () => {
-    this.setState({
-      questionNumber: 1,
-      score: 0
-    });
-  };
+
   goBack = () => {
     this.props.navigation.goBack();
   };
   render() {
     // console.log('Quiz render props: ', this.state);
-    const { questionNumber, finished } = this.state;
-    const { deck, totalQuestions, score } = this;
+    const { questionNumber, finished, score } = this.state;
+    const { deck, totalQuestions } = this;
+    const scorePercentage = Math.round(this.state.score / totalQuestions * 100);
+
     return (
       <View style={styles.container}>
-        <View style={styles.firstRow}>
-          <Text style={styles.questionNum}>
-            {questionNumber} / {totalQuestions}
-          </Text>
-        </View>
-
-        <View style={styles.secondRow}>
-          <Text style={styles.questionTitle}>{deck.questions[questionNumber - 1].question}</Text>
-          <Text
-            style={styles.showAnsBtn}
-            onPress={() => {
-              this.showAnswer();
-            }}
-          >
-            {this.state.answer}
-          </Text>
-        </View>
-
         {finished ? (
-          <View style={styles.thirdRow}>
-            <Text>{scorePercentage > 50 ? 'Congratulations! 😺' : 'Practice makes perfect 😾'}</Text>
+          <View style={styles.results}>
+            <Text>{scorePercentage > 50 ? 'You rock! 👏🏻' : 'Keep practicing 🤞🏻'}</Text>
             <Text>
               {this.state.score}/{deck.questions.length} points earned
             </Text>
             <Text>{scorePercentage}%</Text>
 
-            <TouchableOpacity onPress={this.restart} style={stylesConstants.btnIOS}>
+            <TouchableOpacity onPress={() => this.restart(deck)} style={stylesConstants.btnIOS}>
               <Text style={stylesConstants.submitBtnText}>Restart Quiz</Text>
             </TouchableOpacity>
 
@@ -115,13 +84,34 @@ class Quiz extends Component {
             </TouchableOpacity>
           </View>
         ) : (
-          <View style={styles.thirdRow}>
-            <TouchableOpacity onPress={() => this.next(true)} style={[styles.answerBtn, { backgroundColor: 'green' }]}>
-              <Text style={styles.answerText}>Correct</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.next(false)} style={[styles.answerBtn, { backgroundColor: 'red' }]}>
-              <Text style={styles.answerText}>Incorrect</Text>
-            </TouchableOpacity>
+          <View style={styles.firstRow}>
+            <View style={styles.secondRow}>
+              <Text style={styles.questionNum}>
+                {questionNumber} / {totalQuestions}
+              </Text>
+            </View>
+            <View style={styles.thirdRow}>
+              <Text style={styles.questionTitle}>{deck.questions[questionNumber - 1].question}</Text>
+              <Text
+                style={styles.showAnsBtn}
+                onPress={() => {
+                  this.showAnswer();
+                }}
+              >
+                {this.state.answer}
+              </Text>
+            </View>
+            <View style={styles.fourthRow}>
+              <TouchableOpacity
+                onPress={() => this.next(true)}
+                style={[styles.answerBtn, { backgroundColor: 'green' }]}
+              >
+                <Text style={styles.answerText}>Correct</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => this.next(false)} style={[styles.answerBtn, { backgroundColor: 'red' }]}>
+                <Text style={styles.answerText}>Incorrect</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         )}
       </View>
@@ -131,7 +121,8 @@ class Quiz extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between'
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   firstRow: {
     flex: 1,
@@ -143,6 +134,10 @@ const styles = StyleSheet.create({
   },
   thirdRow: {
     flex: 3,
+    alignItems: 'center'
+  },
+  fourthRow: {
+    flex: 4,
     alignItems: 'center'
   },
   questionNum: {
@@ -171,6 +166,12 @@ const styles = StyleSheet.create({
   answerText: {
     color: colors.white,
     textAlign: 'center'
+  },
+  results: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 100
   }
 });
 export default Quiz;

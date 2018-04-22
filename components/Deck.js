@@ -71,11 +71,10 @@ class Deck extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     alignItems: 'stretch',
-    justifyContent: 'space-between',
-    marginLeft: 20,
-    marginRight: 20,
-    flex: 1
+    marginTop: 100,
+    justifyContent: 'space-between'
   },
   viewInfo: {
     marginTop: 30,
