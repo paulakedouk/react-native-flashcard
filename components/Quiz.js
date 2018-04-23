@@ -17,20 +17,24 @@ class Quiz extends Component {
     // console.log(this.props.navigation.state.params.deck);
     this.deck = this.props.navigation.state.params.deck;
     this.totalQuestions = this.deck.questions.length;
-    // console.log(this.totalQuestions);
-    this.isQuestion = true;
+    this.isShowingAnswer = false;
     this.showAnswer = this.showAnswer.bind(this);
+    this.hideAnswer = this.hideAnswer.bind(this);
   }
 
   showAnswer = () => {
+    this.isShowingAnswer = true;
     this.setState({ answer: this.deck.questions[this.state.questionNumber - 1].answer });
   };
 
+  hideAnswer = () => {
+    this.isShowingAnswer = false;
+    this.setState({ answer: 'Show Answer', isShowingAnswer: false });
+  };
+
   next = correct => {
-    if (correct === true) {
-      this.setState({
-        score: this.state.score + 1
-      });
+    if (this.isShowingAnswer) {
+      this.hideAnswer();
     }
 
     if (this.state.questionNumber >= this.totalQuestions) {
@@ -49,7 +53,7 @@ class Quiz extends Component {
   };
 
   restart = deck => {
-    if (this.finished) {
+    if (this.state.finished) {
       this.setState({ questionNumber: 1, finished: false, score: 0 });
     }
 
@@ -61,6 +65,7 @@ class Quiz extends Component {
   };
 
   render() {
+    console.log(this.isShowingAnswer);
     // console.log('Quiz render props: ', this.state);
     const { questionNumber, finished, score } = this.state;
     const { deck, totalQuestions } = this;
