@@ -12,6 +12,7 @@ import AddDeck from './components/AddDeck';
 import Deck from './components/Deck';
 import AddCard from './components/AddCard';
 import Quiz from './components/Quiz';
+import Score from './components/Score';
 
 // Redux
 import { createStore } from 'redux';
@@ -115,6 +116,27 @@ const RootTabs = StackNavigator({
   },
   Quiz: {
     screen: Quiz,
+    navigationOptions: {
+      headerTintColor: colors.white,
+      title: 'QUIZ',
+      headerStyle:
+        Platform.OS === 'ios'
+          ? {
+              maxHeight: 40,
+              paddingBottom: 20,
+              backgroundColor: colors.darkBlue
+            }
+          : {
+              backgroundColor: colors.darkBlue
+            },
+      headerTitleStyle: {
+        fontWeight: 'bold',
+        fontSize: 14
+      }
+    }
+  },
+  Score: {
+    screen: Score,
     navigationOptions: {
       headerTintColor: colors.white,
       title: 'QUIZ',
