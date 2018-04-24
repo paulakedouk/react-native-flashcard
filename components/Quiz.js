@@ -8,7 +8,7 @@ class Quiz extends Component {
     super(props);
 
     this.state = {
-      deck: '',
+      deck: this.props.navigation.state.params.deck,
       questionNumber: 1,
       finished: false,
       answer: 'Show Answer',
@@ -16,14 +16,13 @@ class Quiz extends Component {
       isShowingAnswer: false
     };
 
-    // console.log(this.props.navigation.state.params.deck);
     this.totalQuestions = this.props.navigation.state.params.deck.questions.length;
   }
 
-  componentWillMount() {
-    const deck = this.props.navigation.state.params.deck;
-    this.setState({ deck: deck });
-  }
+  // componentWillMount() {
+  //   const deck = this.props.navigation.state.params.deck;
+  //   this.setState({ deck: deck });
+  // }
 
   showAnswer = () => {
     this.setState({
@@ -36,7 +35,7 @@ class Quiz extends Component {
     const { score } = this.state;
     const scoreQuestion = 1 / this.totalQuestions;
     this.setState({
-      score: score + scoreQuestion
+      score: score + 1
     });
     this.next();
   };
@@ -61,19 +60,18 @@ class Quiz extends Component {
     clearLocalNotification().then(setLocalNotification());
     this.props.navigation.navigate('Score', { deck, score });
   };
+
   render() {
-    // console.log('Quiz render props: ', this.state);
-    // console.log(this.state.score);
     const { questionNumber, finished, score, deck, isShowingAnswer } = this.state;
-    const totalQuestions = this.state.deck.length;
+    const totalQuestions = this.state.deck.questions.length;
     const question = deck.questions[questionNumber - 1];
+
     return (
       <View style={styles.container}>
         {question === undefined ? (
           this.finishQuiz()
         ) : (
           <View style={styles.firstRow}>
-            {console.log('keep going========')}
             <View style={styles.secondRow}>
               <Text style={styles.questionNum}>
                 {questionNumber} / {totalQuestions}
@@ -150,12 +148,6 @@ const styles = StyleSheet.create({
   answerText: {
     color: colors.white,
     textAlign: 'center'
-  },
-  results: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 100
   }
 });
 export default Quiz;

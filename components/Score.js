@@ -22,13 +22,16 @@ class Score extends Component {
     const { deck, score } = this.props.navigation.state.params;
     console.log(this.props.navigation);
     const totalQuestions = this.props.navigation.state.params.deck.questions.length;
-    const scorePercentage = (score * 100).toFixed();
+    const scorePercentage = Math.round((score * 100).toFixed());
+    1 / this.totalQuestions;
 
     return (
       <View style={styles.container}>
         <View style={styles.results}>
-          <Text>{scorePercentage > 50 ? 'You rock! 👏🏻' : 'Keep practicing 🤞🏻'}</Text>
-          <Text>{scorePercentage}% </Text>
+          <Text style={styles.resultsText}>{scorePercentage > 50 ? 'You rock! 👏🏻' : 'Keep practicing 🤞🏻'} </Text>
+          <Text style={styles.resultsPercentage}>
+            Score: {score} of {totalQuestions}{' '}
+          </Text>
         </View>
 
         <View style={styles.buttons}>
@@ -54,6 +57,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  resultsText: {
+    fontSize: 25,
+    fontWeight: 'bold'
+  },
+  resultsPercentage: {
+    fontSize: 25
   },
   buttons: {
     flex: 2,
