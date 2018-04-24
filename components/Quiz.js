@@ -8,23 +8,31 @@ class Quiz extends Component {
     super(props);
 
     this.state = {
+      deck: '',
       questionNumber: 1,
       finished: false,
       answer: 'Show Answer',
-      score: 0
+      score: 0,
+      isShowingAnswer: false
     };
 
     // console.log(this.props.navigation.state.params.deck);
-    this.deck = this.props.navigation.state.params.deck;
-    this.totalQuestions = this.deck.questions.length;
-    this.isShowingAnswer = false;
+    // this.totalQuestions = this.state.deck.questions.length;
+    // this.isShowingAnswer = false;
     this.showAnswer = this.showAnswer.bind(this);
     this.hideAnswer = this.hideAnswer.bind(this);
   }
 
+  componentWillMount() {
+    const deck = this.props.navigation.state.params.deck;
+    this.setState({ deck: deck });
+  }
+
   showAnswer = () => {
-    this.isShowingAnswer = true;
-    this.setState({ answer: this.deck.questions[this.state.questionNumber - 1].answer });
+    this.setState({
+      answer: this.state.deck.questions[this.state.questionNumber - 1].answer,
+      isShowingAnswer: true
+    });
   };
 
   hideAnswer = () => {
@@ -32,12 +40,13 @@ class Quiz extends Component {
     this.setState({ answer: 'Show Answer', isShowingAnswer: false });
   };
 
-  next = correct => {
-    if (this.isShowingAnswer) {
-      this.hideAnswer();
-    }
+  next = type => {
+    // if (this.isShowingAnswer) {
+    //   this.hideAnswer();
+    // }
+    const totalQuestions = this.state.deck.length;
 
-    if (this.state.questionNumber >= this.totalQuestions) {
+    if (this.state.questionNumber + 1 <= this.totalQuestions) {
       this.setState({
         finished: true
       });
@@ -45,17 +54,29 @@ class Quiz extends Component {
       clearLocalNotification();
       setLocalNotification();
     } else {
-      this.setState((prevState, props) => ({
-        questionNumber: prevState.questionNumber + 1,
-        score: correct ? prevState.score + 1 : prevState.score
-      }));
+      if (type === 'correct') {
+        this.setState((prevState, props) => ({
+          questionNumber: prevState.questionNumber + 1,
+          score: type ? prevState.score + 1 : prevState.score,
+          isShowingAnswer: false
+        }));
+      } else {
+        this.setState((prevState, props) => ({
+          questionNumber: prevState.questionNumber + 1,
+          isShowingAnswer: false
+        }));
+      }
     }
   };
 
   restart = deck => {
-    if (this.state.finished) {
-      this.setState({ questionNumber: 1, finished: false, score: 0 });
-    }
+    console.log('fim!');
+
+    this.setState({
+      questionNumber: 1,
+      finished: false,
+      score: 0
+    });
 
     this.props.navigation.navigate('Quiz', { deck });
   };
@@ -64,16 +85,21 @@ class Quiz extends Component {
     this.props.navigation.navigate('Deck', { deckTitle: deck.title });
   };
 
-  render() {
-    console.log(this.isShowingAnswer);
-    // console.log('Quiz render props: ', this.state);
+  finishQuiz = () => {
     const { questionNumber, finished, score } = this.state;
-    const { deck, totalQuestions } = this;
+    const totalQuestions = this.state.deck.length;
+  };
+
+  render() {
+    // console.log('Quiz render props: ', this.state);
+    // console.log(this.state.score);
+    const { questionNumber, finished, score, deck, isShowingAnswer } = this.state;
+    const totalQuestions = this.state.deck.length;
     const scorePercentage = Math.round(this.state.score / totalQuestions * 100);
 
     return (
       <View style={styles.container}>
-        {finished ? (
+        {questionNumber + 1 <= totalQuestions ? (
           <View style={styles.results}>
             <Text>{scorePercentage > 50 ? 'You rock! 👏🏻' : 'Keep practicing 🤞🏻'}</Text>
             <Text>
@@ -91,6 +117,7 @@ class Quiz extends Component {
           </View>
         ) : (
           <View style={styles.firstRow}>
+            <View style={styles.results}>{console.log('keep going========')}</View>
             <View style={styles.secondRow}>
               <Text style={styles.questionNum}>
                 {questionNumber} / {totalQuestions}
@@ -98,23 +125,24 @@ class Quiz extends Component {
             </View>
             <View style={styles.thirdRow}>
               <Text style={styles.questionTitle}>{deck.questions[questionNumber - 1].question}</Text>
-              <Text
-                style={styles.showAnsBtn}
-                onPress={() => {
-                  this.showAnswer();
-                }}
-              >
-                {this.state.answer}
-              </Text>
+              {!isShowingAnswer && (
+                <Text style={styles.showAnsBtn} onPress={this.showAnswer}>
+                  See answer
+                </Text>
+              )}
+              {isShowingAnswer && <Text style={styles.answer}>{this.state.answer}</Text>}
             </View>
             <View style={styles.fourthRow}>
               <TouchableOpacity
-                onPress={() => this.next(true)}
+                onPress={() => this.next('correct')}
                 style={[styles.answerBtn, { backgroundColor: 'green' }]}
               >
                 <Text style={styles.answerText}>Correct</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => this.next(false)} style={[styles.answerBtn, { backgroundColor: 'red' }]}>
+              <TouchableOpacity
+                onPress={() => this.next('incorrect')}
+                style={[styles.answerBtn, { backgroundColor: 'red' }]}
+              >
                 <Text style={styles.answerText}>Incorrect</Text>
               </TouchableOpacity>
             </View>
