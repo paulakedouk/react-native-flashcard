@@ -14,7 +14,7 @@ export function getDeck(id) {
   return getDecks().then(decks => decks[id]);
 }
 
-export function createDeck(title) {
+export function saveDeckTitle(title) {
   // console.log('title is: ', title);
   return AsyncStorage.mergeItem(
     keys.STORAGE_KEY,
@@ -27,9 +27,9 @@ export function createDeck(title) {
   );
 }
 
-// export function addCardToDeck(title, question) {
-//   return getDecks().then(decks => {
-//     decks[title].questions.push(question);
-//     return AsyncStorage.setItem(keys.STORAGE_KEY, JSON.stringify(decks));
-//   });
-// }
+export function addCardToDeck(title, question) {
+  return getDecks().then(decks => {
+    decks[title].questions.push(question);
+    return AsyncStorage.setItem(keys.STORAGE_KEY, JSON.stringify(decks));
+  });
+}

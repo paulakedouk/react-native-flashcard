@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput, Animated, Platform } from 'react-native';
 import { clearLocalNotification, setLocalNotification } from '../utils/helpers';
 import { colors, stylesConstants } from '../utils/constants';
+import Score from './Score';
 
 class Quiz extends Component {
   constructor(props) {
@@ -9,7 +10,7 @@ class Quiz extends Component {
 
     this.state = {
       deck: this.props.navigation.state.params.deck,
-      questionNumber: 1,
+      questionNumber: 0,
       finished: false,
       answer: 'Show Answer',
       score: 0,
@@ -26,17 +27,18 @@ class Quiz extends Component {
 
   showAnswer = () => {
     this.setState({
-      answer: this.state.deck.questions[this.state.questionNumber - 1].answer,
+      answer: this.state.deck.questions[this.state.questionNumber].answer,
       isShowingAnswer: true
     });
   };
 
   upScore = () => {
     const { score } = this.state;
-    const scoreQuestion = 1 / this.totalQuestions;
+
     this.setState({
       score: score + 1
     });
+
     this.next();
   };
 
@@ -53,32 +55,44 @@ class Quiz extends Component {
     });
   };
 
-  finishQuiz = () => {
-    const { score } = this.state;
-    const { deck } = this.props.navigation.state.params;
-
-    clearLocalNotification().then(setLocalNotification());
-    this.props.navigation.navigate('Score', { deck, score });
+  reset = () => {
+    this.setState({
+      questionNumber: 0,
+      finished: false,
+      score: 0
+    });
   };
 
   render() {
     const { questionNumber, finished, score, deck, isShowingAnswer } = this.state;
+    const questions = this.props.navigation.state.params;
     const totalQuestions = this.state.deck.questions.length;
-    const question = deck.questions[questionNumber - 1];
+    const question = deck.questions[questionNumber];
+    const scorePercentage = Math.round((score * 100).toFixed());
 
-    return (
-      <View style={styles.container}>
-        {question === undefined ? (
-          this.finishQuiz()
-        ) : (
+    if (questionNumber === totalQuestions) {
+      return (
+        <Score
+          score={score}
+          totalQuestions={totalQuestions}
+          navigation={this.props.navigation}
+          questions={questions}
+          deck={deck}
+          scorePer={scorePercentage}
+          reset={this.reset}
+        />
+      );
+    } else {
+      return (
+        <View style={styles.container}>
           <View style={styles.firstRow}>
             <View style={styles.secondRow}>
               <Text style={styles.questionNum}>
-                {questionNumber} / {totalQuestions}
+                {questionNumber + 1} / {totalQuestions}
               </Text>
             </View>
             <View style={styles.thirdRow}>
-              <Text style={styles.questionTitle}>{deck.questions[questionNumber - 1].question}</Text>
+              <Text style={styles.questionTitle}>{deck.questions[questionNumber].question}</Text>
               {!isShowingAnswer && (
                 <Text style={styles.showAnsBtn} onPress={this.showAnswer}>
                   See answer
@@ -95,9 +109,9 @@ class Quiz extends Component {
               </TouchableOpacity>
             </View>
           </View>
-        )}
-      </View>
-    );
+        </View>
+      );
+    }
   }
 }
 const styles = StyleSheet.create({

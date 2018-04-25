@@ -8,7 +8,7 @@ import { colors, stylesConstants } from '../utils/constants';
 // Redux
 import { connect } from 'react-redux';
 import { newDeck } from '../actions';
-import { createDeck } from '../utils/api';
+import { saveDeckTitle } from '../utils/api';
 
 function SubmitBtn({ onPress }) {
   return (
@@ -33,11 +33,21 @@ class AddDeck extends Component {
   submit = () => {
     const { deckTitle } = this.state;
     const { decks, navigation } = this.props;
+    const existingDeckNames = Object.keys(decks).map(title => title.toLowerCase());
 
-    this.props.newDeck(deckTitle);
+    if (!deckTitle || !deckTitle.length) {
+      return alert('Please fill the field');
+    }
 
-    createDeck(deckTitle).then(() => {
-      navigation.navigate('Home', { deckTitle });
+    if (existingDeckNames.indexOf(deckTitle.toLowerCase()) !== -1) {
+      this.setState(() => ({ deckTitle: '' }));
+      return alert('Você já tem um baralho com este nome!');
+    }
+
+    this.props.dispatch(newDeck(deckTitle));
+
+    saveDeckTitle(deckTitle).then(() => {
+      navigation.navigate('Deck', { deckTitle: deckTitle });
     });
 
     this.setState(() => ({ deckTitle: '' }));
@@ -102,4 +112,4 @@ const mapStateToProps = decks => {
   };
 };
 
-export default connect(mapStateToProps, { newDeck })(AddDeck);
+export default connect(mapStateToProps)(AddDeck);

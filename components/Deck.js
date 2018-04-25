@@ -6,21 +6,23 @@ import { colors, stylesConstants } from '../utils/constants';
 
 class Deck extends Component {
   handleAddCard = () => {
-    const { deckTitle, decks } = this.props;
+    const { deckTitle, decks, navigation } = this.props;
     const deck = decks[deckTitle];
-    this.props.navigation.navigate('AddCard', { deck });
+    navigation.navigate('AddCard', { deckTitle, deck });
   };
 
   handleQuiz = () => {
-    const { deckTitle, decks } = this.props;
+    const { deckTitle, decks, navigation } = this.props;
     const deck = decks[deckTitle];
-    console.log(deck);
-    this.props.navigation.navigate('Quiz', { deck });
+    // console.log(deck);
+    navigation.navigate('Quiz', { deckTitle, deck });
   };
 
   showBtns = () => {
     const { deckTitle, decks } = this.props;
     const deck = decks[deckTitle];
+
+    // console.log(deck);
 
     if (deck.questions.length > 0) {
       return (
@@ -54,7 +56,8 @@ class Deck extends Component {
   render() {
     const { deckTitle, decks } = this.props;
     const deck = decks[deckTitle];
-    // console.log('Deck -------------- ', deck);
+
+    // console.log('Deck -------------- ', this.props.decks);
 
     return (
       <View style={styles.container}>

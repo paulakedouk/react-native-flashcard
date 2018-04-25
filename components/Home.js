@@ -8,13 +8,10 @@ import { colors, stylesConstants } from '../utils/constants';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 
 class Home extends Component {
-  async componentDidMount() {
-    try {
-      const decks = await getDecks(); //fetch the decks
-      this.props.dispatch(loadingDecks(decks)); //update the redux store, once the decks are fetched
-    } catch (error) {
-      console.log('error: ', error);
-    }
+  componentDidMount() {
+    getDecks().then(decks => {
+      this.props.dispatch(loadingDecks(decks));
+    });
   }
 
   _keyExtractor = (item, index) => index;
@@ -59,6 +56,28 @@ class Home extends Component {
             <Text>Add a deck to start a quiz</Text>
           </View>
         )}
+
+        {/* {deckList.length ? (
+          deckList.map(deck => (
+            <TouchableOpacity
+              key={deck.title}
+              onPress={() => this.props.navigation.navigate('Deck', { deckName: deck.title })}
+              style={styles.touch}
+            >
+              <View style={styles.viewInfo}>
+                <View>
+                  <Text style={styles.titleCard}>{`${deck.title}`.toUpperCase()}</Text>
+                  <Text style={styles.infoCard}>{deck.questions.length} CARTAS</Text>
+                </View>
+                <FontAwesome name="chevron-right" size={20} color={colors.charlestonGreen} />
+              </View>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <View style={[styles.container, { margin: 20, alignSelf: 'center' }]}>
+            <Text style={styles.titleCard}>Nenhum baralho cadastrado ainda!!!</Text>
+          </View>
+        )} */}
       </ScrollView>
     );
   }

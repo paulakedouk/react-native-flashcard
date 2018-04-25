@@ -12,13 +12,6 @@ const decks = (state = {}, action) => {
         ...state,
         ...action.updateDeck
       };
-    case EMPTY_DECK:
-      return {};
-
-    case DELETE_DECK:
-      let newstate = state;
-      delete newstate[action.title];
-      return newstate;
 
     default:
       return state;

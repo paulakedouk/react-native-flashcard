@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput, Platform } from 'react-native';
 import { clearLocalNotification, setLocalNotification } from '../utils/helpers';
 import { colors, stylesConstants } from '../utils/constants';
+import { NavigationActions } from 'react-navigation';
 
 // Redux
 import { connect } from 'react-redux';
-import { newDeck } from '../actions';
-import { createDeck } from '../utils/api';
+import { updateDeck } from '../actions';
+import { addCardToDeck } from '../utils/api';
 
 function SubmitBtn({ onPress }) {
   return (
@@ -25,29 +26,39 @@ class AddCard extends Component {
     answer: ''
   };
 
-  handleTitleInput = deckTitle => {
-    this.setState({ deckTitle });
+  componentDidMount() {
+    const { deckTitle, deck } = this.props.navigation.state.params;
+    this.setState({ deck, deckTitle });
+  }
+
+  handleQuestionChange = question => {
+    this.setState({ question });
+  };
+
+  handleAnswerChange = answer => {
+    this.setState({ answer });
   };
 
   submit = () => {
-    const { deck } = this.props.navigation.state.params;
-    const { decks, navigation } = this.props;
-    const { question, answer } = this.state;
+    const { question, answer, deckTitle, deck } = this.state;
     const card = {
       question,
       answer
     };
 
     if (question === '' || answer === '') {
-      alert('Fill all the fields');
+      alert('Please fill all the fields');
     } else {
-      deck.questions = deck.questions.concat(card);
+      let updatedDeck = { ...deck };
+      updatedDeck.questions.push(card);
 
-      this.props.newDeck(deck);
+      this.props.dispatch(updateDeck(updatedDeck));
 
-      createDeck(deck).then(() => {
-        navigation.goBack(null);
-      });
+      addCardToDeck(deckTitle, card);
+
+      this.setState(() => ({ question: '', answer: '', deck: updatedDeck }));
+
+      this.props.navigation.dispatch(NavigationActions.back());
     }
   };
 
@@ -116,11 +127,4 @@ const styles = StyleSheet.create({
     marginBottom: 10
   }
 });
-
-const mapStateToProps = decks => {
-  return {
-    decks
-  };
-};
-
-export default connect(mapStateToProps, { newDeck })(AddCard);
+export default connect()(AddCard);
