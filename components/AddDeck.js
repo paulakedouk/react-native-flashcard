@@ -23,34 +23,18 @@ function SubmitBtn({ onPress }) {
 
 class AddDeck extends Component {
   state = {
-    deckTitle: ''
+    title: ''
   };
 
-  handleTitleInput = deckTitle => {
-    this.setState({ deckTitle });
+  handleTitleInput = title => {
+    this.setState({ title });
   };
 
-  submit = () => {
-    const { deckTitle } = this.state;
-    const { decks, navigation } = this.props;
-    const existingDeckNames = Object.keys(decks).map(title => title.toLowerCase());
-
-    if (!deckTitle || !deckTitle.length) {
-      return alert('Please fill the field');
-    }
-
-    if (existingDeckNames.indexOf(deckTitle.toLowerCase()) !== -1) {
-      this.setState(() => ({ deckTitle: '' }));
-      return alert('Você já tem um baralho com este nome!');
-    }
-
-    this.props.dispatch(newDeck(deckTitle));
-
-    saveDeckTitle(deckTitle).then(() => {
-      navigation.navigate('Deck', { deckTitle: deckTitle });
-    });
-
-    this.setState(() => ({ deckTitle: '' }));
+  saveDeckAndNavigate = title => {
+    this.props.newDeck(title);
+    this.setState({ title: '' });
+    // Keyboard.dismiss()
+    this.props.navigation.navigate('Deck', { title });
   };
 
   render() {
@@ -60,14 +44,14 @@ class AddDeck extends Component {
           <Text style={styles.headerText}>Add a title to your deck</Text>
           <TextInput
             placeholder="Deck title"
-            value={this.state.deckTitle}
+            value={this.state.title}
             maxLength={30}
             onChangeText={this.handleTitleInput}
             style={styles.textInput}
             underlineColorAndroid="transparent"
           />
           <View style={stylesConstants.boxSubmitBtn}>
-            <SubmitBtn onPress={this.submit} />
+            <SubmitBtn onPress={() => this.saveDeckAndNavigate(this.state.title)} />
           </View>
         </View>
       </View>
@@ -106,10 +90,10 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = decks => {
+function mapDispatchToProps(dispatch) {
   return {
-    decks
+    newDeck: title => dispatch(newDeck(title))
   };
-};
+}
 
-export default connect(mapStateToProps)(AddDeck);
+export default connect(null, mapDispatchToProps)(AddDeck);

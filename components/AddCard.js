@@ -6,7 +6,7 @@ import { NavigationActions } from 'react-navigation';
 
 // Redux
 import { connect } from 'react-redux';
-import { updateDeck } from '../actions';
+import { addCard } from '../actions';
 import { addCardToDeck } from '../utils/api';
 
 function SubmitBtn({ onPress }) {
@@ -26,37 +26,26 @@ class AddCard extends Component {
     answer: ''
   };
 
-  componentDidMount() {
-    const { deckTitle, deck } = this.props.navigation.state.params;
-    this.setState({ deck, deckTitle });
-  }
-
-  handleQuestionChange = question => {
-    this.setState({ question });
-  };
-
-  handleAnswerChange = answer => {
-    this.setState({ answer });
-  };
-
   submit = () => {
-    const { question, answer, deckTitle, deck } = this.state;
+    const deck = this.props.navigation.state.params.deckTitle;
+    const { question, answer } = this.state;
     const card = {
       question,
       answer
     };
 
+    // console.log('deck', deck);
     if (question === '' || answer === '') {
       alert('Please fill all the fields');
     } else {
-      let updatedDeck = { ...deck };
-      updatedDeck.questions.push(card);
+      this.props.dispatch(addCard(deck, card));
 
-      this.props.dispatch(updateDeck(updatedDeck));
+      addCardToDeck(deck, card);
 
-      addCardToDeck(deckTitle, card);
-
-      this.setState(() => ({ question: '', answer: '', deck: updatedDeck }));
+      this.setState({
+        question: '',
+        answer: ''
+      });
 
       this.props.navigation.dispatch(NavigationActions.back());
     }
@@ -127,4 +116,8 @@ const styles = StyleSheet.create({
     marginBottom: 10
   }
 });
-export default connect()(AddCard);
+
+function mapStateToProps(decks) {
+  return { decks };
+}
+export default connect(mapStateToProps)(AddCard);

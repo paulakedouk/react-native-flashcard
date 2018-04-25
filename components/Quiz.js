@@ -20,10 +20,9 @@ class Quiz extends Component {
     this.totalQuestions = this.props.navigation.state.params.deck.questions.length;
   }
 
-  // componentWillMount() {
-  //   const deck = this.props.navigation.state.params.deck;
-  //   this.setState({ deck: deck });
-  // }
+  componentDidMount() {
+    const { deck } = this.props.navigation.state.params;
+  }
 
   showAnswer = () => {
     this.setState({
@@ -65,19 +64,15 @@ class Quiz extends Component {
 
   render() {
     const { questionNumber, finished, score, deck, isShowingAnswer } = this.state;
-    const questions = this.props.navigation.state.params;
-    const totalQuestions = this.state.deck.questions.length;
-    const question = deck.questions[questionNumber];
+    const { questions } = this.props.navigation.state.params.deck;
     const scorePercentage = Math.round((score * 100).toFixed());
 
-    if (questionNumber === totalQuestions) {
+    if (questionNumber === this.totalQuestions) {
       return (
         <Score
           score={score}
-          totalQuestions={totalQuestions}
+          totalQuestions={this.totalQuestions}
           navigation={this.props.navigation}
-          questions={questions}
-          deck={deck}
           scorePer={scorePercentage}
           reset={this.reset}
         />
@@ -88,11 +83,11 @@ class Quiz extends Component {
           <View style={styles.firstRow}>
             <View style={styles.secondRow}>
               <Text style={styles.questionNum}>
-                {questionNumber + 1} / {totalQuestions}
+                {questionNumber + 1} / {this.totalQuestions}
               </Text>
             </View>
             <View style={styles.thirdRow}>
-              <Text style={styles.questionTitle}>{deck.questions[questionNumber].question}</Text>
+              <Text style={styles.questionTitle}>{questions[questionNumber].question}</Text>
               {!isShowingAnswer && (
                 <Text style={styles.showAnsBtn} onPress={this.showAnswer}>
                   See answer
@@ -164,4 +159,5 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   }
 });
+
 export default Quiz;

@@ -1,4 +1,4 @@
-import { LOADING_DECKS, UPDATE_DECK, EMPTY_DECK, DELETE_DECK } from '../actions';
+import { LOADING_DECKS, ADD_DECK, ADD_CARD } from '../actions';
 
 const decks = (state = {}, action) => {
   switch (action.type) {
@@ -7,11 +7,23 @@ const decks = (state = {}, action) => {
         ...state,
         ...action.decks
       };
-    case UPDATE_DECK:
+    case ADD_DECK:
       return {
         ...state,
-        ...action.updateDeck
+        ...action.newDeck
       };
+      case ADD_CARD:
+      const {title, card} = action
+      return {
+        ...state,
+        [title]: {
+          title,
+          'questions': [
+            ...state[title].questions,
+            card
+          ]
+        }
+      }
 
     default:
       return state;

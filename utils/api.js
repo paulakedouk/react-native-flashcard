@@ -27,9 +27,19 @@ export function saveDeckTitle(title) {
   );
 }
 
-export function addCardToDeck(title, question) {
-  return getDecks().then(decks => {
-    decks[title].questions.push(question);
+// export function addCardToDeck(title, card) {
+//   return getDecks().then(results => {
+//     const data = JSON.parse(results);
+//     data[title].questions.push(card);
+//     AsyncStorage.setItem(keys.STORAGE_KEY, JSON.stringify(data));
+//   });
+// }
+
+export function addCardToDeck(title, card) {
+  // console.log('addCardToDeck ', title, card);
+  return AsyncStorage.getItem(keys.STORAGE_KEY).then(data => {
+    const decks = JSON.parse(data);
+    decks[title].questions.push(card);
     return AsyncStorage.setItem(keys.STORAGE_KEY, JSON.stringify(decks));
   });
 }

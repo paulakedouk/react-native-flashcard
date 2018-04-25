@@ -7,6 +7,28 @@ import { clearLocalNotification, setLocalNotification } from '../utils/helpers';
 import { colors, stylesConstants } from '../utils/constants';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 
+function DeckTitle({ deck, onPress }) {
+  const total_questions = 'questions' in deck && deck.questions !== undefined ? deck.questions.length : 0;
+
+  return (
+    <TouchableOpacity onPress={() => onPress(deck)}>
+      <View style={stylesConstants.cardContainer}>
+        <View style={styles.viewInfo}>
+          <Text style={styles.titleCard}>{`${deck.title}`.toUpperCase()}</Text>
+          {Platform.OS === 'ios' ? (
+            <MaterialCommunityIcons name="chevron-right" size={20} color={colors.darkBlue} style={{ marginLeft: 20 }} />
+          ) : (
+            <FontAwesome name="chevron-right" size={10} color={colors.darkBlue} style={{ marginLeft: 20 }} />
+          )}
+        </View>
+        <Text>
+          {deck.questions.length} {deck.questions.length == 1 ? 'card' : 'cards'}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
+}
+
 class Home extends Component {
   componentDidMount() {
     getDecks().then(decks => {
@@ -14,70 +36,35 @@ class Home extends Component {
     });
   }
 
-  _keyExtractor = (item, index) => index;
+  _keyExtractor = (deck, index) => index;
 
   render() {
     const { decks, deckList } = this.props;
     // console.log('Deck -------------- ', deckList);
 
-    const hasCards = item => {
-      // console.log('Item ======== ', item);
-
-      return (
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('Deck', { deckTitle: item.title })}>
-          <View style={stylesConstants.cardContainer}>
-            <View style={styles.viewInfo}>
-              <Text style={styles.titleCard}>{`${item.title}`.toUpperCase()}</Text>
-              {Platform.OS === 'ios' ? (
-                <MaterialCommunityIcons
-                  name="chevron-right"
-                  size={20}
-                  color={colors.darkBlue}
-                  style={{ marginLeft: 20 }}
-                />
-              ) : (
-                <FontAwesome name="chevron-right" size={10} color={colors.darkBlue} style={{ marginLeft: 20 }} />
-              )}
-            </View>
-            <Text>{item.questions.length} cards</Text>
-          </View>
-        </TouchableOpacity>
-      );
-    };
-
     return (
       <ScrollView>
         <Text style={styles.headerText}>All Decks</Text>
 
-        <FlatList data={deckList} renderItem={({ item }) => hasCards(item)} keyExtractor={this._keyExtractor} />
+        <ScrollView contentContainerStyle={styles.container}>
+          {decks &&
+            Object.keys(decks).map((title, i) => {
+              const deck = decks[title];
+              return (
+                <DeckTitle
+                  key={i}
+                  deck={{ title, questions: decks[title].questions }}
+                  onPress={() => this.props.navigation.navigate('Deck', { deck })}
+                />
+              );
+            })}
+        </ScrollView>
 
         {(decks === undefined || decks === null) && (
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Text>Add a deck to start a quiz</Text>
           </View>
         )}
-
-        {/* {deckList.length ? (
-          deckList.map(deck => (
-            <TouchableOpacity
-              key={deck.title}
-              onPress={() => this.props.navigation.navigate('Deck', { deckName: deck.title })}
-              style={styles.touch}
-            >
-              <View style={styles.viewInfo}>
-                <View>
-                  <Text style={styles.titleCard}>{`${deck.title}`.toUpperCase()}</Text>
-                  <Text style={styles.infoCard}>{deck.questions.length} CARTAS</Text>
-                </View>
-                <FontAwesome name="chevron-right" size={20} color={colors.charlestonGreen} />
-              </View>
-            </TouchableOpacity>
-          ))
-        ) : (
-          <View style={[styles.container, { margin: 20, alignSelf: 'center' }]}>
-            <Text style={styles.titleCard}>Nenhum baralho cadastrado ainda!!!</Text>
-          </View>
-        )} */}
       </ScrollView>
     );
   }
@@ -111,7 +98,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = decks => ({
   decks,
-  deckList: typeof decks == 'object' ? Object.keys(decks).map(deckTitle => decks[deckTitle]) : []
+  deckList: typeof decks == 'object' ? Object.keys(decks).map(title => decks[title]) : []
 });
 
 export default connect(mapStateToProps)(Home);
