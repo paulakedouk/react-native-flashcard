@@ -8,7 +8,7 @@ import { colors, stylesConstants } from '../utils/constants';
 // Redux
 import { connect } from 'react-redux';
 import { newDeck } from '../actions';
-import { saveDeckTitle } from '../utils/api';
+import { createDeck } from '../utils/api';
 
 function SubmitBtn({ onPress }) {
   return (
@@ -23,18 +23,24 @@ function SubmitBtn({ onPress }) {
 
 class AddDeck extends Component {
   state = {
-    title: ''
+    deckTitle: ''
   };
 
-  handleTitleInput = title => {
-    this.setState({ title });
+  handleTitleInput = deckTitle => {
+    this.setState({ deckTitle });
   };
 
-  saveDeckAndNavigate = title => {
-    this.props.newDeck(title);
-    this.setState({ title: '' });
-    // Keyboard.dismiss()
-    this.props.navigation.navigate('Deck', { title });
+  submit = () => {
+    const { deckTitle } = this.state;
+    const { decks, navigation } = this.props;
+
+    this.props.newDeck(deckTitle);
+
+    createDeck(deckTitle).then(() => {
+      navigation.navigate('Home', { deckTitle });
+    });
+
+    this.setState(() => ({ deckTitle: '' }));
   };
 
   render() {
@@ -44,14 +50,14 @@ class AddDeck extends Component {
           <Text style={styles.headerText}>Add a title to your deck</Text>
           <TextInput
             placeholder="Deck title"
-            value={this.state.title}
+            value={this.state.deckTitle}
             maxLength={30}
             onChangeText={this.handleTitleInput}
             style={styles.textInput}
             underlineColorAndroid="transparent"
           />
           <View style={stylesConstants.boxSubmitBtn}>
-            <SubmitBtn onPress={() => this.saveDeckAndNavigate(this.state.title)} />
+            <SubmitBtn onPress={this.submit} />
           </View>
         </View>
       </View>
@@ -90,10 +96,10 @@ const styles = StyleSheet.create({
   }
 });
 
-function mapDispatchToProps(dispatch) {
+const mapStateToProps = decks => {
   return {
-    newDeck: title => dispatch(newDeck(title))
+    decks
   };
-}
+};
 
-export default connect(null, mapDispatchToProps)(AddDeck);
+export default connect(mapStateToProps, { newDeck })(AddDeck);

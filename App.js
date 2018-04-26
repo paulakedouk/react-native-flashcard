@@ -75,7 +75,7 @@ const RootTabs = StackNavigator({
   Deck: {
     screen: Deck,
     navigationOptions: ({ navigation }) => ({
-      title: `${navigation.state.params.deck.title}`.toUpperCase() + ' DECK',
+      title: `${navigation.state.params.deckTitle}`.toUpperCase() + ' DECK',
       headerTintColor: colors.white,
       headerStyle:
         Platform.OS === 'ios'
@@ -116,27 +116,6 @@ const RootTabs = StackNavigator({
   },
   Quiz: {
     screen: Quiz,
-    navigationOptions: {
-      headerTintColor: colors.white,
-      title: 'QUIZ',
-      headerStyle:
-        Platform.OS === 'ios'
-          ? {
-              maxHeight: 40,
-              paddingBottom: 20,
-              backgroundColor: colors.darkBlue
-            }
-          : {
-              backgroundColor: colors.darkBlue
-            },
-      headerTitleStyle: {
-        fontWeight: 'bold',
-        fontSize: 14
-      }
-    }
-  },
-  Score: {
-    screen: Score,
     navigationOptions: {
       headerTintColor: colors.white,
       title: 'QUIZ',

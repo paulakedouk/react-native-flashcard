@@ -5,62 +5,62 @@ import { getDecks, deleteDeck } from '../actions/index';
 import { colors, stylesConstants } from '../utils/constants';
 
 class Deck extends Component {
-  constructor(props) {
-    super(props);
+  handleAddCard = () => {
+    const { deckTitle, decks } = this.props;
+    const deck = decks[deckTitle];
+    this.props.navigation.navigate('AddCard', { deck });
+  };
 
-    this.state = {
-      deck: {}
-    };
-  }
-
-  componentWillMount() {
-    this.setState({ deck: this.props.navigation.state.params.decks });
-  }
-
-  handleQuiz = deck => {
+  handleQuiz = () => {
+    const { deckTitle, decks } = this.props;
+    const deck = decks[deckTitle];
+    console.log(deck);
     this.props.navigation.navigate('Quiz', { deck });
   };
 
   showBtns = () => {
-    // console.log(this.props.deck);
-    const { deck } = this.props;
-    const deckTitle = this.props.navigation.state.params.deck.title;
+    const { deckTitle, decks } = this.props;
+    const deck = decks[deckTitle];
 
-    return (
-      <View style={stylesConstants.boxSubmitBtn}>
+    if (deck.questions.length > 0) {
+      return (
+        <View style={stylesConstants.boxSubmitBtn}>
+          <TouchableOpacity
+            style={Platform.OS === 'ios' ? stylesConstants.btnIOS : stylesConstants.btnAndroid}
+            onPress={this.handleQuiz}
+          >
+            <Text style={stylesConstants.submitBtnText}>Start Quiz</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={Platform.OS === 'ios' ? stylesConstants.btnIOS : stylesConstants.btnAndroid}
+            onPress={this.handleAddCard}
+          >
+            <Text style={stylesConstants.submitBtnText}>Add Card</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    } else {
+      return (
         <TouchableOpacity
           style={Platform.OS === 'ios' ? stylesConstants.btnIOS : stylesConstants.btnAndroid}
-          onPress={() => this.handleQuiz(deck)}
-        >
-          <Text style={stylesConstants.submitBtnText}>Start Quiz</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={Platform.OS === 'ios' ? stylesConstants.btnIOS : stylesConstants.btnAndroid}
-          onPress={() => this.props.navigation.navigate('AddCard', { deckTitle })}
+          onPress={this.handleAddCard}
         >
           <Text style={stylesConstants.submitBtnText}>Add Card</Text>
         </TouchableOpacity>
-      </View>
-    );
+      );
+    }
   };
 
   render() {
-    const { title, questions } = this.props.navigation.state.params.deck;
-    const { navigation } = this.props;
-
-    // console.log(navigation.state.params.deck.title);
-
-    // const deck = this.props.decks[title];
-
-    // console.log('Title -------------- ', this.props.navigation.state.params.decks[title]);
+    const { deckTitle, decks } = this.props;
+    const deck = decks[deckTitle];
+    // console.log('Deck -------------- ', deck);
 
     return (
       <View style={styles.container}>
         <View style={styles.viewInfo}>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.infoTxt}>
-            {questions.length} {questions.length == 1 ? 'card' : 'cards'}
-          </Text>
+          <Text style={styles.title}>{`${deck.title}`.toUpperCase()}</Text>
+          <Text style={styles.infoTxt}>{deck.questions.length} CARDS</Text>
         </View>
 
         <View style={stylesConstants.boxSubmitBtn}>{this.showBtns()}</View>
@@ -95,12 +95,13 @@ const styles = StyleSheet.create({
   }
 });
 
-function mapStateToProps(decks, ownProps) {
-  // console.log('Deck mapStateToProps decks: ', decks);
+const mapStateToProps = (decks, { navigation }) => {
+  const { deckTitle } = navigation.state.params;
 
   return {
-    deck: Object.values(decks).find(item => item.title === ownProps.navigation.state.params.deck.title)
+    decks,
+    deckTitle
   };
-}
+};
 
-export default connect(mapStateToProps)(Deck);
+export default connect(mapStateToProps, { getDecks })(Deck);

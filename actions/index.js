@@ -1,7 +1,6 @@
 export const LOADING_DECKS = 'LOADING_DECKS';
-export const ADD_DECK = 'ADD_DECK'
-export const ADD_CARD = 'ADD_CARD'
-
+export const ADD_DECK = 'ADD_DECK';
+export const UPDATED_DECK = 'UPDATED_DECK';
 import * as API from '../utils/api';
 
 export const loadingDecks = decks => {
@@ -11,24 +10,25 @@ export const loadingDecks = decks => {
   };
 };
 
-export const newDeck = title => {
-  const deck = {
-    [title]: {
-      title: title,
-      questions: []
-    }
-  };
-
+export const addNewDeck = deck => {
   return {
     type: ADD_DECK,
     deck
   };
 };
 
-export const addCard = (title, card) => {
-  return {
-    type: ADD_CARD,
-    title,
-    card
+export const updatedDeck = deck => ({
+  type: UPDATED_DECK,
+  updatedDeck: {
+    [deck.title]: deck
   }
-}
+});
+
+export const newDeck = title => {
+  const deck = {
+    title,
+    questions: []
+  };
+
+  return updatedDeck(deck);
+};

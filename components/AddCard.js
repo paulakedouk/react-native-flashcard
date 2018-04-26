@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput, Platform } from 'react-native';
 import { clearLocalNotification, setLocalNotification } from '../utils/helpers';
 import { colors, stylesConstants } from '../utils/constants';
-import { NavigationActions } from 'react-navigation';
 
 // Redux
 import { connect } from 'react-redux';
-import { addCard } from '../actions';
+import { newDeck } from '../actions';
 import { addCardToDeck } from '../utils/api';
 
 function SubmitBtn({ onPress }) {
@@ -26,28 +25,29 @@ class AddCard extends Component {
     answer: ''
   };
 
+  handleTitleInput = deckTitle => {
+    this.setState({ deckTitle });
+  };
+
   submit = () => {
-    const deck = this.props.navigation.state.params.deckTitle;
+    const { deck } = this.props.navigation.state.params;
+    const { decks, navigation } = this.props;
     const { question, answer } = this.state;
     const card = {
       question,
       answer
     };
 
-    // console.log('deck', deck);
     if (question === '' || answer === '') {
-      alert('Please fill all the fields');
+      alert('Fill all the fields');
     } else {
-      this.props.dispatch(addCard(deck, card));
+      deck.questions = deck.questions.concat(card);
 
-      addCardToDeck(deck, card);
+      this.props.newDeck(deck);
 
-      this.setState({
-        question: '',
-        answer: ''
+      addCardToDeck(deck).then(() => {
+        navigation.goBack(null);
       });
-
-      this.props.navigation.dispatch(NavigationActions.back());
     }
   };
 
@@ -117,7 +117,10 @@ const styles = StyleSheet.create({
   }
 });
 
-function mapStateToProps(decks) {
-  return { decks };
-}
-export default connect(mapStateToProps)(AddCard);
+const mapStateToProps = decks => {
+  return {
+    decks
+  };
+};
+
+export default connect(mapStateToProps, { newDeck })(AddCard);
