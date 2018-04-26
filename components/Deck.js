@@ -14,7 +14,7 @@ class Deck extends Component {
   handleQuiz = () => {
     const { deckTitle, decks } = this.props;
     const deck = decks[deckTitle];
-    console.log(deck);
+
     this.props.navigation.navigate('Quiz', { deck });
   };
 
@@ -54,7 +54,6 @@ class Deck extends Component {
   render() {
     const { deckTitle, decks } = this.props;
     const deck = decks[deckTitle];
-    // console.log('Deck -------------- ', deck);
 
     return (
       <View style={styles.container}>

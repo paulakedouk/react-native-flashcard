@@ -60,14 +60,6 @@ class Quiz extends Component {
     });
   };
 
-  // finishQuiz = () => {
-  //   const totalQuestions = this.state.deck.questions.length;
-
-  //   // clearLocalNotification().then(setLocalNotification());
-  //       console.log('Test');
-
-  // };
-
   render() {
     const { questionNumber, finished, score, deck, isShowingAnswer } = this.state;
     const totalQuestions = this.state.deck.questions.length;

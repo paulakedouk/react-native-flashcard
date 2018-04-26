@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput, Platform } from 'react-native';
 import { clearLocalNotification, setLocalNotification } from '../utils/helpers';
 import { colors, stylesConstants } from '../utils/constants';
+import { NavigationActions } from 'react-navigation';
 
 // Redux
 import { connect } from 'react-redux';
@@ -31,7 +32,7 @@ class AddCard extends Component {
 
   submit = () => {
     const { deck } = this.props.navigation.state.params;
-    const { decks, navigation } = this.props;
+    const title = deck.title;
     const { question, answer } = this.state;
     const card = {
       question,
@@ -45,9 +46,9 @@ class AddCard extends Component {
 
       this.props.newDeck(deck);
 
-      addCardToDeck(deck).then(() => {
-        navigation.goBack(null);
-      });
+      this.setState(() => ({ question: '', answer: '' }));
+
+      addCardToDeck(title, deck, answer).then(this.props.navigation.dispatch(NavigationActions.back()));
     }
   };
 
