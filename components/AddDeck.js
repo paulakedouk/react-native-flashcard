@@ -32,7 +32,7 @@ class AddDeck extends Component {
 
   submit = () => {
     const { deckTitle } = this.state;
-    const { decks, navigation } = this.props;
+    const { navigation } = this.props;
 
     this.props.newDeck(deckTitle);
 
@@ -96,10 +96,4 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = decks => {
-  return {
-    decks
-  };
-};
-
-export default connect(mapStateToProps, { newDeck })(AddDeck);
+export default connect(null, { newDeck })(AddDeck);

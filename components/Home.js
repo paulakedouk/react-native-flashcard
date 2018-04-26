@@ -21,6 +21,7 @@ class Home extends Component {
 
   render() {
     const { decks, deckList } = this.props;
+
     const hasCards = item => {
       return (
         <TouchableOpacity onPress={() => this.props.navigation.navigate('Deck', { deckTitle: item.title })}>
