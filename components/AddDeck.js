@@ -37,7 +37,7 @@ class AddDeck extends Component {
     this.props.newDeck(deckTitle);
 
     createDeck(deckTitle).then(() => {
-      navigation.navigate('Home', { deckTitle });
+      navigation.navigate('Deck', { deckTitle });
     });
 
     this.setState(() => ({ deckTitle: '' }));

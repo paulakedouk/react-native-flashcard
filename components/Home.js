@@ -46,7 +46,7 @@ class Home extends Component {
     };
 
     return (
-      <ScrollView>
+      <View>
         <Text style={styles.headerText}>All Decks</Text>
 
         <FlatList data={deckList} renderItem={({ item }) => hasCards(item)} keyExtractor={this._keyExtractor} />
@@ -56,7 +56,7 @@ class Home extends Component {
             <Text>Add a deck to start a quiz</Text>
           </View>
         )}
-      </ScrollView>
+      </View>
     );
   }
 }
