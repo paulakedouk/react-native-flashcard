@@ -68,47 +68,49 @@ class Quiz extends Component {
 
     return (
       <View style={styles.container}>
-        {question === undefined ? (
+        {question ? (
+          <View style={{ flex: 1, alignItems: 'center' }}>
+            <View style={{ flex: 2, alignItems: 'center' }}>
+              <Text style={{ fontSize: 22, marginTop: 100 }}>
+                {questionNumber} / {totalQuestions}
+              </Text>
+            </View>
+            <View style={{ flex: 3, alignItems: 'center' }}>
+              <Text style={styles.questionTitle}>{deck.questions[questionNumber - 1].question}</Text>
+              {!isShowingAnswer && (
+                <Text style={{ textAlign: 'center', color: colors.darkBlue }} onPress={this.showAnswer}>
+                  See answer
+                </Text>
+              )}
+              {isShowingAnswer && <Text style={styles.answer}>{this.state.answer}</Text>}
+            </View>
+            <View style={{ flex: 4, alignItems: 'center' }}>
+              <TouchableOpacity onPress={this.upScore} style={[styles.answerBtn, { backgroundColor: 'green' }]}>
+                <Text style={{ color: colors.white, textAlign: 'center' }}>Correct</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={this.downScore} style={[styles.answerBtn, { backgroundColor: 'red' }]}>
+                <Text style={{ color: colors.white, textAlign: 'center' }}>Incorrect</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : (
           <View>
-            <View style={styles.results}>
-              <Text style={styles.resultsText}>{scorePercentage > 50 ? 'You rock! 👏🏻' : 'Keep practicing 🤞🏻'} </Text>
-              <Text style={styles.resultsPercentage}>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ fontSize: 25, fontWeight: 'bold' }}>
+                {scorePercentage > 50 ? 'You rock! 👏🏻' : 'Keep practicing 🤞🏻'}{' '}
+              </Text>
+              <Text style={{ fontSize: 25 }}>
                 Score: {this.state.score} of {totalQuestions}{' '}
               </Text>
             </View>
 
-            <View style={styles.buttons}>
+            <View style={{ flex: 2, alignItems: 'center' }}>
               <TouchableOpacity onPress={this.restart} style={stylesConstants.btnIOS}>
                 <Text style={stylesConstants.submitBtnText}>Restart Quiz</Text>
               </TouchableOpacity>
 
               <TouchableOpacity onPress={this.goBack} style={stylesConstants.btnIOS}>
                 <Text style={stylesConstants.submitBtnText}>Back to Deck</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        ) : (
-          <View style={styles.firstRow}>
-            <View style={styles.secondRow}>
-              <Text style={styles.questionNum}>
-                {questionNumber} / {totalQuestions}
-              </Text>
-            </View>
-            <View style={styles.thirdRow}>
-              <Text style={styles.questionTitle}>{deck.questions[questionNumber - 1].question}</Text>
-              {!isShowingAnswer && (
-                <Text style={styles.showAnsBtn} onPress={this.showAnswer}>
-                  See answer
-                </Text>
-              )}
-              {isShowingAnswer && <Text style={styles.answer}>{this.state.answer}</Text>}
-            </View>
-            <View style={styles.fourthRow}>
-              <TouchableOpacity onPress={this.upScore} style={[styles.answerBtn, { backgroundColor: 'green' }]}>
-                <Text style={styles.answerText}>Correct</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={this.downScore} style={[styles.answerBtn, { backgroundColor: 'red' }]}>
-                <Text style={styles.answerText}>Incorrect</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -123,35 +125,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  firstRow: {
-    flex: 1,
-    alignItems: 'center'
-  },
-  secondRow: {
-    flex: 2,
-    alignItems: 'center'
-  },
-  thirdRow: {
-    flex: 3,
-    alignItems: 'center'
-  },
-  fourthRow: {
-    flex: 4,
-    alignItems: 'center'
-  },
-  questionNum: {
-    fontSize: 22,
-    marginTop: 100
-  },
   questionTitle: {
     marginTop: 50,
     marginBottom: 20,
     fontSize: 25,
     fontWeight: 'bold'
-  },
-  showAnsBtn: {
-    textAlign: 'center',
-    color: colors.darkBlue
   },
   answerBtn: {
     width: 300,
@@ -161,26 +139,6 @@ const styles = StyleSheet.create({
     marginLeft: 40,
     marginRight: 40,
     marginBottom: 20
-  },
-  answerText: {
-    color: colors.white,
-    textAlign: 'center'
-  },
-  results: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  resultsText: {
-    fontSize: 25,
-    fontWeight: 'bold'
-  },
-  resultsPercentage: {
-    fontSize: 25
-  },
-  buttons: {
-    flex: 2,
-    alignItems: 'center'
   }
 });
 export default Quiz;
